@@ -12,7 +12,7 @@
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <meta name="theme-color" content="#e8b84b">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;600;700&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg:#0a0c0f; --panel:#111418; --panel2:#181c22; --border:#2a3040;
@@ -22,6 +22,8 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:16px;min-height:100vh;overflow-x:hidden;}
+
+/* HEADER */
 header{background:var(--panel);border-bottom:1px solid var(--border);padding:0 16px;height:56px;
   display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
 header h1{font-family:var(--head);font-size:17px;font-weight:600;color:var(--accent);letter-spacing:2px;text-transform:uppercase;}
@@ -29,41 +31,61 @@ header h1{font-family:var(--head);font-size:17px;font-weight:600;color:var(--acc
 .lang-btn button{background:none;border:1px solid var(--border);color:var(--dim);padding:4px 10px;
   border-radius:4px;font-family:var(--body);font-size:13px;cursor:pointer;transition:all .2s;}
 .lang-btn button.active{border-color:var(--accent);color:var(--accent);background:rgba(232,184,75,.08);}
+
+/* TABS */
 .tabs{display:flex;background:var(--panel);border-bottom:1px solid var(--border);overflow-x:auto;}
 .tab{padding:12px 18px;font-family:var(--head);font-size:12px;letter-spacing:1.5px;text-transform:uppercase;
   color:var(--dim);border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .2s;}
 .tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+
+/* PAGES */
 .page{display:none;padding:16px;}
 .page.active{display:block;}
+
+/* SELECT */
 select{background:var(--panel2);border:1px solid var(--border);color:var(--text);
-  padding:10px 32px 10px 12px;border-radius:6px;font-family:var(--body);font-size:15px;font-weight:500;width:100%;
-  appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M0 0l6 8 6-8z' fill='%237a8a9a'/%3E%3C/svg%3E");
+  padding:10px 32px 10px 12px;border-radius:6px;font-family:var(--body);font-size:15px;
+  font-weight:500;width:100%;appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M0 0l6 8 6-8z' fill='%237a8a9a'/%3E%3C/svg%3E");
   background-repeat:no-repeat;background-position:right 12px center;}
+
+/* TIMER DISPLAY */
 .timer-display{background:var(--panel2);border:1px solid var(--border);border-radius:12px;
-  padding:20px 16px;text-align:center;margin-bottom:14px;position:relative;overflow:hidden;}
+  padding:24px 16px 20px;text-align:center;margin-bottom:14px;position:relative;overflow:hidden;}
 .timer-display::before{content:'';position:absolute;inset:0;
   background:radial-gradient(ellipse at center top,rgba(232,184,75,.04) 0%,transparent 70%);pointer-events:none;}
+
 .phase-label{font-family:var(--head);font-size:12px;letter-spacing:3px;text-transform:uppercase;
-  color:var(--dim);margin-bottom:4px;height:18px;transition:color .3s;}
+  color:var(--dim);margin-bottom:4px;min-height:18px;transition:color .3s;}
 .phase-label.red{color:var(--red);} .phase-label.green{color:var(--green);}
 .phase-label.yellow{color:var(--accent);} .phase-label.blue{color:var(--blue);}
-.balle-label{font-family:var(--head);font-size:14px;letter-spacing:2px;color:var(--dim);
-  margin-bottom:4px;min-height:20px;transition:color .3s;}
-.balle-label.green{color:var(--green);} .balle-label.red{color:var(--red);} .balle-label.blue{color:var(--blue);}
-.timer-number{font-family:var(--mono);font-size:80px;font-weight:400;line-height:1;
-  color:var(--bright);letter-spacing:-2px;transition:color .3s;}
+
+.balle-label{font-family:var(--head);font-size:13px;letter-spacing:2px;color:var(--dim);
+  margin-bottom:6px;min-height:18px;transition:color .3s;}
+.balle-label.green{color:var(--green);} .balle-label.red{color:var(--red);}
+.balle-label.blue{color:var(--blue);}
+
+.timer-number{font-family:var(--mono);font-size:88px;font-weight:400;line-height:1;
+  color:var(--bright);letter-spacing:-3px;transition:color .3s;}
 .timer-number.red{color:var(--red);} .timer-number.green{color:var(--green);}
 .timer-number.yellow{color:var(--accent);} .timer-number.blue{color:var(--blue);}
-.status-lights{display:flex;justify-content:center;gap:20px;margin-top:14px;}
-.light{width:14px;height:14px;border-radius:50%;background:var(--panel);border:2px solid var(--border);transition:all .3s;}
-.light.red-on{background:var(--red);border-color:var(--red);box-shadow:0 0 12px var(--red);}
-.light.green-on{background:var(--green);border-color:var(--green);box-shadow:0 0 12px var(--green);}
+
+.status-lights{display:flex;justify-content:center;gap:24px;margin-top:16px;}
+.light{width:16px;height:16px;border-radius:50%;background:var(--panel);border:2px solid var(--border);transition:all .3s;}
+.light.red-on{background:var(--red);border-color:var(--red);box-shadow:0 0 14px var(--red);}
+.light.green-on{background:var(--green);border-color:var(--green);box-shadow:0 0 14px var(--green);}
+
+/* COMMAND */
 .command-display{background:var(--panel);border:1px solid var(--border);border-radius:8px;
-  padding:10px 16px;margin-bottom:12px;text-align:center;min-height:42px;display:flex;align-items:center;justify-content:center;}
-.command-text{font-family:var(--head);font-size:18px;font-weight:600;letter-spacing:4px;
+  padding:11px 16px;margin-bottom:12px;text-align:center;min-height:44px;
+  display:flex;align-items:center;justify-content:center;}
+.command-text{font-family:var(--head);font-size:20px;font-weight:600;letter-spacing:5px;
   text-transform:uppercase;color:var(--accent);transition:color .3s;}
 .command-text.idle{color:var(--dim);} .command-text.red{color:var(--red);}
 .command-text.green{color:var(--green);} .command-text.blue{color:var(--blue);}
+.command-text.yellow{color:var(--accent);}
+
+/* BUTTONS */
 .ctrl-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
 .btn-start{background:linear-gradient(135deg,#2a6e3a,#1e5a2e);border:1px solid #4be87a44;color:var(--green);
   font-family:var(--head);font-size:20px;font-weight:600;letter-spacing:3px;padding:18px;border-radius:8px;
@@ -79,22 +101,29 @@ select{background:var(--panel2);border:1px solid var(--border);color:var(--text)
   font-family:var(--head);font-size:16px;letter-spacing:2px;padding:14px;border-radius:8px;
   cursor:pointer;text-transform:uppercase;transition:all .2s;}
 .btn-reset:hover{border-color:var(--dim);color:var(--text);}
+
+/* MIC BAR */
 .mic-bar{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--panel2);
   border:1px solid var(--border);border-radius:8px;margin-bottom:12px;}
 .mic-level-track{flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden;}
-.mic-level-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--green),var(--accent),var(--red));border-radius:3px;transition:width .05s;}
+.mic-level-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--green),var(--accent),var(--red));
+  border-radius:3px;transition:width .05s;}
 .mic-label{font-family:var(--mono);font-size:12px;color:var(--dim);width:28px;text-align:right;}
 .rec-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--red);
-  margin-right:5px;animation:pulse 1s infinite;}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.2}}
+  margin-right:5px;animation:blink 1s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+
+/* SHOT TABLE */
 .section-title{font-family:var(--head);font-size:11px;letter-spacing:3px;text-transform:uppercase;
   color:var(--dim);margin-bottom:8px;margin-top:18px;}
 .shot-table{background:var(--panel2);border:1px solid var(--border);border-radius:8px;overflow:hidden;width:100%;}
 .shot-table table{width:100%;border-collapse:collapse;}
 .shot-table th{background:var(--panel);padding:7px 10px;font-family:var(--head);font-size:10px;
   letter-spacing:2px;text-transform:uppercase;color:var(--dim);text-align:left;font-weight:400;}
-.shot-table td{padding:7px 10px;font-family:var(--mono);font-size:13px;color:var(--text);border-top:1px solid var(--border);}
-.shot-ok{color:var(--green)!important;} .shot-overtime{color:var(--accent)!important;}
+.shot-table td{padding:8px 10px;font-family:var(--mono);font-size:13px;color:var(--text);border-top:1px solid var(--border);}
+.shot-ok{color:var(--green)!important;} .shot-over{color:var(--accent)!important;}
+
+/* SETTINGS */
 .settings-section{background:var(--panel2);border:1px solid var(--border);border-radius:10px;margin-bottom:14px;overflow:hidden;}
 .settings-header{background:var(--panel);padding:10px 16px;font-family:var(--head);font-size:11px;
   font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--accent);border-bottom:1px solid var(--border);}
@@ -113,26 +142,31 @@ select{background:var(--panel2);border:1px solid var(--border);color:var(--text)
   background:var(--dim);border-radius:50%;transition:all .3s;}
 .toggle input:checked+.toggle-slider{background:rgba(75,232,122,.3);}
 .toggle input:checked+.toggle-slider::before{transform:translateX(20px);background:var(--green);}
+
+/* EVENTS */
 .event-card{background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:13px 16px;
   margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:border-color .2s;}
 .event-card:hover{border-color:var(--accent);}
 .event-card-name{font-size:15px;font-weight:600;color:var(--bright);}
 .event-card-detail{font-size:12px;color:var(--dim);margin-top:2px;}
+
+/* HELP */
 .help-block{background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px;}
-.help-block h3{font-family:var(--head);font-size:14px;font-weight:600;letter-spacing:1px;color:var(--accent);margin-bottom:6px;text-transform:uppercase;}
-.help-block p{font-size:14px;color:var(--dim);line-height:1.6;}
+.help-block h3{font-family:var(--head);font-size:14px;font-weight:600;letter-spacing:1px;color:var(--accent);
+  margin-bottom:6px;text-transform:uppercase;}
+.help-block p{font-size:14px;color:var(--dim);line-height:1.6;white-space:pre-line;}
+
+/* TOAST */
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);
   background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:10px 20px;
   font-size:14px;color:var(--text);transition:transform .3s;z-index:999;white-space:nowrap;}
 .toast.show{transform:translateX(-50%) translateY(0);}
-.btn-simulate{background:rgba(75,204,232,.1);border:1px solid rgba(75,204,232,.3);color:var(--blue);
-  font-family:var(--head);font-size:13px;letter-spacing:2px;padding:10px;border-radius:8px;
-  cursor:pointer;text-transform:uppercase;width:100%;margin-bottom:10px;transition:all .2s;}
-.btn-simulate:hover{background:rgba(75,204,232,.2);}
-@media(max-width:380px){.timer-number{font-size:62px;}}
+
+@media(max-width:380px){.timer-number{font-size:68px;}}
 </style>
 </head>
 <body>
+
 <header>
   <h1 id="app-title">Minuterie Pistolet</h1>
   <div class="lang-btn">
@@ -140,6 +174,7 @@ select{background:var(--panel2);border:1px solid var(--border);color:var(--text)
     <button id="btn-en" onclick="setLang('en')">EN</button>
   </div>
 </header>
+
 <div class="tabs">
   <button class="tab active" onclick="showPage('timer')" id="tab-timer">Minuterie</button>
   <button class="tab" onclick="showPage('events')" id="tab-events">Épreuves</button>
@@ -149,8 +184,14 @@ select{background:var(--panel2);border:1px solid var(--border);color:var(--text)
 
 <!-- TIMER -->
 <div class="page active" id="page-timer">
-  <div style="margin-bottom:12px"><select id="event-select" onchange="onEventChange()"></select></div>
-  <div class="command-display"><div class="command-text idle" id="command-text">— PRÊT —</div></div>
+  <div style="margin-bottom:12px">
+    <select id="event-select" onchange="onEventChange()"></select>
+  </div>
+
+  <div class="command-display">
+    <div class="command-text idle" id="command-text">— PRÊT —</div>
+  </div>
+
   <div class="timer-display">
     <div class="phase-label" id="phase-label">EN ATTENTE</div>
     <div class="balle-label" id="balle-label"></div>
@@ -160,6 +201,7 @@ select{background:var(--panel2);border:1px solid var(--border);color:var(--text)
       <div class="light" id="light-green"></div>
     </div>
   </div>
+
   <div id="mic-bar" class="mic-bar" style="display:none">
     <span style="font-size:15px">🎙</span>
     <div class="mic-level-track"><div class="mic-level-fill" id="mic-fill"></div></div>
@@ -168,18 +210,24 @@ select{background:var(--panel2);border:1px solid var(--border);color:var(--text)
       <span class="rec-dot"></span>REC
     </span>
   </div>
-  <button class="btn-simulate" id="btn-simulate" style="display:none" onclick="simulateShot()">🎯 SIMULATION TIR</button>
+
   <div class="ctrl-row">
     <button class="btn-start" id="btn-start" onclick="startSequence()">▶ DÉPART</button>
-    <button class="btn-stop" id="btn-stop" onclick="stopSequence()" disabled>■ STOP</button>
+    <button class="btn-stop"  id="btn-stop"  onclick="stopSequence()" disabled>■ STOP</button>
     <button class="btn-reset" id="btn-reset" onclick="resetAll()">↺ RESET</button>
   </div>
+
   <p class="section-title" id="lbl-shots">Coups détectés</p>
   <div class="shot-table">
-    <table><thead><tr>
-      <th id="th-num">#</th><th id="th-time">Temps</th>
-      <th id="th-split">Split</th><th id="th-note">Note</th>
-    </tr></thead><tbody id="shot-tbody"></tbody></table>
+    <table>
+      <thead><tr>
+        <th id="th-num">#</th>
+        <th id="th-time">Temps</th>
+        <th id="th-split">Split</th>
+        <th id="th-note">Note</th>
+      </tr></thead>
+      <tbody id="shot-tbody"></tbody>
+    </table>
   </div>
 </div>
 
@@ -194,11 +242,16 @@ select{background:var(--panel2);border:1px solid var(--border);color:var(--text)
   <div class="settings-section">
     <div class="settings-header" id="sh-general">Général</div>
     <div class="settings-row">
-      <div><div class="settings-label" id="sl-loading">Temps de chargement</div>
-        <div class="settings-desc" id="sd-loading">Avant le signal CHARGEZ</div></div>
+      <div>
+        <div class="settings-label" id="sl-loading">Temps de chargement</div>
+        <div class="settings-desc" id="sd-loading">Avant le signal CHARGEZ</div>
+      </div>
       <select id="set-loading-time" onchange="savePref()">
-        <option value="30">30s</option><option value="60" selected>60s</option>
-        <option value="90">90s</option><option value="120">120s</option><option value="180">3 min</option>
+        <option value="30">30s</option>
+        <option value="60" selected>60s</option>
+        <option value="90">90s</option>
+        <option value="120">120s</option>
+        <option value="180">3 min</option>
       </select>
     </div>
     <div class="settings-row">
@@ -208,44 +261,27 @@ select{background:var(--panel2);border:1px solid var(--border);color:var(--text)
         <option value="up">Comptage ↑</option>
       </select>
     </div>
-  </div>
-  <div class="settings-section">
-    <div class="settings-header" id="sh-voice">Synthèse vocale</div>
     <div class="settings-row">
-      <div><div class="settings-label" id="sl-voice">Voix active</div>
-        <div class="settings-desc" id="sd-voice">CHARGEZ / ATTENTION / FEU / STOP</div></div>
-      <label class="toggle"><input type="checkbox" id="set-voice" checked onchange="savePref()"><span class="toggle-slider"></span></label>
-    </div>
-    <div class="settings-row">
-      <div><div class="settings-label" id="sl-voice-sel">Voix francophone</div></div>
-      <select id="set-voice-sel" style="max-width:180px;font-size:12px;" onchange="savePref()"></select>
-    </div>
-    <div class="settings-row">
-      <div><div class="settings-label" id="sl-speed">Vitesse de la voix</div></div>
-      <input type="range" id="set-speed" min="0.5" max="2" step="0.05" value="1"
-        oninput="document.getElementById('speed-val').textContent=parseFloat(this.value).toFixed(1)+'×';savePref()">
-      <span class="range-val" id="speed-val">1.0×</span>
+      <div>
+        <div class="settings-label" id="sl-vol">Volume des commandes</div>
+      </div>
+      <input type="range" id="set-vol" min="0" max="1" step="0.05" value="1"
+        oninput="document.getElementById('vol-val').textContent=Math.round(this.value*100)+'%';savePref()">
+      <span class="range-val" id="vol-val">100%</span>
     </div>
   </div>
-  <div class="settings-section">
-    <div class="settings-header" id="sh-sound">Son & Bip</div>
-    <div class="settings-row">
-      <div><div class="settings-label" id="sl-beep">Bip sonore</div></div>
-      <label class="toggle"><input type="checkbox" id="set-beep" checked onchange="savePref()"><span class="toggle-slider"></span></label>
-    </div>
-    <div class="settings-row">
-      <div><div class="settings-label" id="sl-vol">Volume</div></div>
-      <input type="range" id="set-vol" min="0" max="100" value="80"
-        oninput="document.getElementById('vol-val').textContent=this.value+'%';savePref()">
-      <span class="range-val" id="vol-val">80%</span>
-    </div>
-  </div>
+
   <div class="settings-section">
     <div class="settings-header" id="sh-mic">Microphone</div>
     <div class="settings-row">
-      <div><div class="settings-label" id="sl-mic">Détection des coups</div>
-        <div class="settings-desc" id="sd-mic">Microphone pour détecter les tirs</div></div>
-      <label class="toggle"><input type="checkbox" id="set-mic" onchange="toggleMic()"><span class="toggle-slider"></span></label>
+      <div>
+        <div class="settings-label" id="sl-mic">Détection des coups</div>
+        <div class="settings-desc" id="sd-mic">Microphone pour détecter les tirs</div>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" id="set-mic" onchange="toggleMic()">
+        <span class="toggle-slider"></span>
+      </label>
     </div>
     <div class="settings-row">
       <div><div class="settings-label" id="sl-thresh">Seuil de sensibilité</div></div>
@@ -254,8 +290,10 @@ select{background:var(--panel2);border:1px solid var(--border);color:var(--text)
       <span class="range-val" id="thresh-val">65%</span>
     </div>
     <div class="settings-row">
-      <div><div class="settings-label" id="sl-echo">Délai anti-rebond</div>
-        <div class="settings-desc" id="sd-echo">Entre deux coups détectés</div></div>
+      <div>
+        <div class="settings-label" id="sl-echo">Délai anti-rebond</div>
+        <div class="settings-desc" id="sd-echo">Entre deux coups détectés</div>
+      </div>
       <input type="range" id="set-echo" min="50" max="800" step="10" value="200"
         oninput="document.getElementById('echo-val').textContent=this.value+'ms';savePref()">
       <span class="range-val" id="echo-val">200ms</span>
@@ -265,55 +303,117 @@ select{background:var(--panel2);border:1px solid var(--border);color:var(--text)
 
 <!-- HELP -->
 <div class="page" id="page-help">
-  <div class="help-block"><h3 id="h-usage">Utilisation</h3>
-    <p id="hp-usage">Sélectionnez une épreuve, réglez le temps de chargement, appuyez sur DÉPART. La voix annonce chaque phase. Activez le microphone pour détecter automatiquement les coups.</p></div>
-  <div class="help-block"><h3 id="h-overtime">Hors-temps (+2s)</h3>
-    <p id="hp-overtime">Après chaque fenêtre de tir, l'app écoute 2 secondes de plus. Les coups détectés sont marqués HORS TEMPS — ne comptent pas en points mais indiquent le retard exact du tireur.</p></div>
-  <div class="help-block"><h3 id="h-vitesse">Vitesse 25m</h3>
-    <p id="hp-vitesse">Cycle × 5 balles : Repos 7s (cible cachée, bras à 45°) → Tir 3s (cible visible) + 2s écoute hors-temps.</p></div>
-  <div class="help-block"><h3 id="h-vo">V.O — Vitesse Olympique</h3>
-    <p id="hp-vo">5 coups en une seule fenêtre de 4s, 6s ou 8s. L'écoute continue 2s après la fin pour les coups hors-temps.</p></div>
+  <div class="help-block">
+    <h3 id="h-seq">Séquence</h3>
+    <p id="hp-seq">1. Sélectionnez l'épreuve
+2. Réglez le temps de chargement
+3. Appuyez sur DÉPART
+4. Les commandes audio de Paul guident la séquence
+5. Le tableau enregistre les coups (micro requis)</p>
+  </div>
+  <div class="help-block">
+    <h3 id="h-over">Hors-temps (+2s)</h3>
+    <p id="hp-over">Après chaque fenêtre de tir, l'app écoute 2 secondes supplémentaires. Les coups détectés pendant cette période sont marqués HORS TEMPS en orange — ils ne comptent pas en points mais indiquent le retard exact du tireur.</p>
+  </div>
+  <div class="help-block">
+    <h3 id="h-v25">Vitesse 25m</h3>
+    <p id="hp-v25">Cycle répété 5 fois :
+→ REPOS 7s (bras à 45°, cible cachée)
+→ TIR 3s (cible visible)
+→ +2s écoute hors-temps</p>
+  </div>
+  <div class="help-block">
+    <h3 id="h-audio">Audio</h3>
+    <p id="hp-audio">Les commandes vocales sont celles de l'application originale 25m Pistol Timer (voix de Paul). Le volume est réglable dans les Réglages.</p>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-// ═══ DÉFINITION ÉPREUVES ═══
-const EVENTS_DEF = [
-  { key:'prec25',  shots:5, type:'fixed',      fireTime:300, overtime:2,
-    fr:{name:'Précision 25m',    detail:'5 coups — 5 min (300s) — Cibles fixes'},
-    en:{name:'Precision 25m',    detail:'5 shots — 5 min (300s) — Fixed targets'} },
-  { key:'vitesse25', shots:5, type:'turning37', fireTime:3, restTime:7, overtime:2,
-    fr:{name:'Vitesse 25m',      detail:'5 balles — 3s visible / 7s cachée — Tournantes'},
-    en:{name:'Speed 25m',        detail:'5 shots — 3s visible / 7s hidden — Turning'} },
-  { key:'vo4',    shots:5, type:'window',      fireTime:4,  overtime:2,
-    fr:{name:'V.O 4s',           detail:'5 coups — 4 secondes — Cibles tournantes'},
-    en:{name:'R.F 4s',           detail:'5 shots — 4 seconds — Turning targets'} },
-  { key:'vo6',    shots:5, type:'window',      fireTime:6,  overtime:2,
-    fr:{name:'V.O 6s',           detail:'5 coups — 6 secondes — Cibles tournantes'},
-    en:{name:'R.F 6s',           detail:'5 shots — 6 seconds — Turning targets'} },
-  { key:'vo8',    shots:5, type:'window',      fireTime:8,  overtime:2,
-    fr:{name:'V.O 8s',           detail:'5 coups — 8 secondes — Cibles tournantes'},
-    en:{name:'R.F 8s',           detail:'5 shots — 8 seconds — Turning targets'} },
-  { key:'std150', shots:5, type:'fixed',       fireTime:150, overtime:2,
-    fr:{name:'Standard 150s',    detail:'5 coups — 150 secondes — Cibles fixes'},
-    en:{name:'Standard 150s',    detail:'5 shots — 150 seconds — Fixed targets'} },
-  { key:'std20',  shots:5, type:'fixed',       fireTime:20,  overtime:2,
-    fr:{name:'Standard 20s',     detail:'5 coups — 20 secondes — Cibles fixes'},
-    en:{name:'Standard 20s',     detail:'5 shots — 20 seconds — Fixed targets'} },
-  { key:'std10',  shots:5, type:'fixed',       fireTime:10,  overtime:2,
-    fr:{name:'Standard 10s',     detail:'5 coups — 10 secondes — Cibles fixes'},
-    en:{name:'Standard 10s',     detail:'5 shots — 10 seconds — Fixed targets'} },
+// ═══════════════════════════════
+// ÉPREUVES
+// ═══════════════════════════════
+const EVENTS = [
+  { key:'prec25',   shots:5, type:'fixed',     fireTime:300, overtime:2, seriesAudio:null,
+    fr:{name:'Précision 25m',   detail:'5 coups — 5 min — Cibles fixes'},
+    en:{name:'Precision 25m',   detail:'5 shots — 5 min — Fixed targets'} },
+  { key:'vitesse25',shots:5, type:'turning37', fireTime:3, restTime:7, overtime:2, seriesAudio:null,
+    fr:{name:'Vitesse 25m',     detail:'5 balles — 3s visible / 7s cachée'},
+    en:{name:'Speed 25m',       detail:'5 shots — 3s visible / 7s hidden'} },
+  { key:'vo4',      shots:5, type:'window',    fireTime:4,  overtime:2, seriesAudio:'raw/paul_series_4.ogg',
+    fr:{name:'V.O 4s',          detail:'5 coups — 4 secondes — Cibles tournantes'},
+    en:{name:'R.F 4s',          detail:'5 shots — 4 seconds — Turning targets'} },
+  { key:'vo6',      shots:5, type:'window',    fireTime:6,  overtime:2, seriesAudio:'raw/paul_series_6.ogg',
+    fr:{name:'V.O 6s',          detail:'5 coups — 6 secondes — Cibles tournantes'},
+    en:{name:'R.F 6s',          detail:'5 shots — 6 seconds — Turning targets'} },
+  { key:'vo8',      shots:5, type:'window',    fireTime:8,  overtime:2, seriesAudio:'raw/paul_series_8.ogg',
+    fr:{name:'V.O 8s',          detail:'5 coups — 8 secondes — Cibles tournantes'},
+    en:{name:'R.F 8s',          detail:'5 shots — 8 seconds — Turning targets'} },
+  { key:'std150',   shots:5, type:'fixed',     fireTime:150, overtime:2, seriesAudio:'raw/paul_series_150.ogg',
+    fr:{name:'Standard 150s',   detail:'5 coups — 150 secondes — Cibles fixes'},
+    en:{name:'Standard 150s',   detail:'5 shots — 150 seconds — Fixed targets'} },
+  { key:'std20',    shots:5, type:'fixed',     fireTime:20,  overtime:2, seriesAudio:'raw/paul_series_20.ogg',
+    fr:{name:'Standard 20s',    detail:'5 coups — 20 secondes — Cibles fixes'},
+    en:{name:'Standard 20s',    detail:'5 shots — 20 seconds — Fixed targets'} },
+  { key:'std10',    shots:5, type:'fixed',     fireTime:10,  overtime:2, seriesAudio:'raw/paul_series_10.ogg',
+    fr:{name:'Standard 10s',    detail:'5 coups — 10 secondes — Cibles fixes'},
+    en:{name:'Standard 10s',    detail:'5 shots — 10 seconds — Fixed targets'} },
 ];
 
-// ═══ TRADUCTIONS ═══
+// ═══════════════════════════════
+// AUDIO FILES
+// ═══════════════════════════════
+const SND = {
+  load:      'raw/paul_command_load.ogg',
+  attention: 'raw/paul_command_attention.ogg',
+  start:     'raw/paul_command_start.ogg',
+  stop:      'raw/paul_command_stop.ogg',
+  unload:    'raw/paul_command_unload.ogg',
+  beep:      'raw/beep.ogg',
+};
+
+// Preload all audio
+const audioCache = {};
+function preloadAudio() {
+  const all = Object.values(SND);
+  EVENTS.forEach(e => { if (e.seriesAudio) all.push(e.seriesAudio); });
+  all.forEach(src => {
+    if (!audioCache[src]) {
+      const a = new Audio(src);
+      a.volume = getVol();
+      audioCache[src] = a;
+    }
+  });
+}
+
+function getVol() { return parseFloat(document.getElementById('set-vol').value); }
+
+function playAudio(src) {
+  return new Promise(resolve => {
+    if (!src) { resolve(); return; }
+    try {
+      const a = new Audio(src);
+      a.volume = getVol();
+      a.onended = resolve;
+      a.onerror = resolve;
+      a.play().catch(resolve);
+    } catch(e) { resolve(); }
+  });
+}
+
+// ═══════════════════════════════
+// TRADUCTIONS
+// ═══════════════════════════════
 const T = {
-  fr:{ appTitle:'Minuterie Pistolet', tabTimer:'Minuterie', tabEvents:'Épreuves', tabSettings:'Réglages', tabHelp:'Aide',
+  fr:{
+    appTitle:'Minuterie Pistolet', tabTimer:'Minuterie', tabEvents:'Épreuves',
+    tabSettings:'Réglages', tabHelp:'Aide',
     btnStart:'▶ DÉPART', btnStop:'■ STOP', btnReset:'↺ RESET',
-    cmdReady:'— PRÊT —', cmdLoad:'CHARGEZ', cmdAttention:'ATTENTION',
-    cmdFire:'FEU', cmdStop:'STOP', cmdDecharge:'DÉCHARGEZ', cmdRepos:'REPOS', cmdCible:'TIR',
+    cmdReady:'— PRÊT —', cmdLoad:'CHARGEZ', cmdAttn:'ATTENTION',
+    cmdFire:'FEU', cmdStop:'STOP', cmdUnload:'DÉCHARGEZ', cmdRest:'REPOS',
     phaseWait:'EN ATTENTE', phaseLoad:'CHARGEMENT', phaseAttn:'ATTENTION',
-    phaseFire:'TIR', phaseRest:'REPOS', phaseOver:'HORS-TEMPS', phaseStop:'STOP', phaseDone:'TERMINÉ',
+    phaseFire:'TIR', phaseRest:'REPOS', phaseOver:'HORS-TEMPS', phaseDone:'TERMINÉ',
     lblShots:'Coups détectés', thNum:'#', thTime:'Temps', thSplit:'Split', thNote:'Note',
     noShots:'Aucun coup enregistré', noteOk:'OK', noteOver:'HORS TEMPS',
     balleOf:'Balle', ofLbl:'/ 5',
@@ -322,22 +422,22 @@ const T = {
     lbl_events_title:'Épreuves disponibles',
     sh_general:'Général', sl_loading:'Temps de chargement', sd_loading:'Avant le signal CHARGEZ',
     sl_dir:'Direction du chrono', dir_down:'Décompte ↓', dir_up:'Comptage ↑',
-    sh_voice:'Synthèse vocale', sl_voice:'Voix active', sd_voice:'CHARGEZ / ATTENTION / FEU / STOP',
-    sl_voice_sel:'Voix francophone', sl_speed:'Vitesse de la voix',
-    sh_sound:'Son & Bip', sl_beep:'Bip sonore', sl_vol:'Volume',
+    sl_vol:'Volume des commandes',
     sh_mic:'Microphone', sl_mic:'Détection des coups', sd_mic:'Microphone pour détecter les tirs',
     sl_thresh:'Seuil de sensibilité', sl_echo:'Délai anti-rebond', sd_echo:'Entre deux coups détectés',
-    h_usage:'Utilisation', hp_usage:'Sélectionnez une épreuve, réglez le temps de chargement, appuyez sur DÉPART. La voix annonce chaque phase. Activez le microphone pour détecter automatiquement les coups.',
-    h_overtime:'Hors-temps (+2s)', hp_overtime:'Après chaque fenêtre de tir, l\'app écoute 2 secondes de plus. Les coups détectés sont marqués HORS TEMPS.',
-    h_vitesse:'Vitesse 25m', hp_vitesse:'Cycle × 5 balles : Repos 7s (cible cachée, bras à 45°) → Tir 3s (cible visible) + 2s écoute hors-temps.',
-    h_vo:'V.O — Vitesse Olympique', hp_vo:'5 coups en une seule fenêtre de 4s, 6s ou 8s. L\'écoute continue 2s après la fin.',
-    simulate:'🎯 SIMULATION TIR' },
-  en:{ appTitle:'Pistol Timer', tabTimer:'Timer', tabEvents:'Events', tabSettings:'Settings', tabHelp:'Help',
+    h_seq:'Séquence', hp_seq:'1. Sélectionnez l\'épreuve\n2. Réglez le temps de chargement\n3. Appuyez sur DÉPART\n4. Les commandes audio guident la séquence\n5. Le tableau enregistre les coups (micro requis)',
+    h_over:'Hors-temps (+2s)', hp_over:'Après chaque fenêtre de tir, l\'app écoute 2 secondes supplémentaires. Les coups détectés sont marqués HORS TEMPS en orange.',
+    h_v25:'Vitesse 25m', hp_v25:'Cycle × 5 balles :\n→ REPOS 7s (bras à 45°, cible cachée)\n→ TIR 3s (cible visible)\n→ +2s écoute hors-temps',
+    h_audio:'Audio', hp_audio:'Les commandes vocales sont celles de l\'application originale 25m Pistol Timer (voix de Paul). Le volume est réglable dans les Réglages.',
+  },
+  en:{
+    appTitle:'Pistol Timer', tabTimer:'Timer', tabEvents:'Events',
+    tabSettings:'Settings', tabHelp:'Help',
     btnStart:'▶ START', btnStop:'■ STOP', btnReset:'↺ RESET',
-    cmdReady:'— READY —', cmdLoad:'LOAD', cmdAttention:'ATTENTION',
-    cmdFire:'FIRE', cmdStop:'STOP', cmdDecharge:'UNLOAD', cmdRepos:'REST', cmdCible:'FIRE',
+    cmdReady:'— READY —', cmdLoad:'LOAD', cmdAttn:'ATTENTION',
+    cmdFire:'FIRE', cmdStop:'STOP', cmdUnload:'UNLOAD', cmdRest:'REST',
     phaseWait:'STANDBY', phaseLoad:'LOADING', phaseAttn:'ATTENTION',
-    phaseFire:'FIRE', phaseRest:'REST', phaseOver:'OVERTIME', phaseStop:'STOP', phaseDone:'DONE',
+    phaseFire:'FIRE', phaseRest:'REST', phaseOver:'OVERTIME', phaseDone:'DONE',
     lblShots:'Detected shots', thNum:'#', thTime:'Time', thSplit:'Split', thNote:'Note',
     noShots:'No shots registered', noteOk:'OK', noteOver:'OVERTIME',
     balleOf:'Shot', ofLbl:'/ 5',
@@ -346,19 +446,19 @@ const T = {
     lbl_events_title:'Available events',
     sh_general:'General', sl_loading:'Loading time', sd_loading:'Before LOAD command',
     sl_dir:'Timer direction', dir_down:'Count down ↓', dir_up:'Count up ↑',
-    sh_voice:'Speech synthesis', sl_voice:'Voice active', sd_voice:'LOAD / ATTENTION / FIRE / STOP',
-    sl_voice_sel:'French voice', sl_speed:'Voice speed',
-    sh_sound:'Sound & Beep', sl_beep:'Beep', sl_vol:'Volume',
+    sl_vol:'Command volume',
     sh_mic:'Microphone', sl_mic:'Shot detection', sd_mic:'Microphone to detect shots',
     sl_thresh:'Sensitivity threshold', sl_echo:'Anti-bounce delay', sd_echo:'Between two shots',
-    h_usage:'Usage', hp_usage:'Select an event, set loading time, press START. Voice guides each phase. Enable microphone for automatic shot detection.',
-    h_overtime:'Overtime (+2s)', hp_overtime:'After each fire window, the app listens 2 extra seconds. Shots in this period are marked OVERTIME.',
-    h_vitesse:'Speed 25m', hp_vitesse:'Cycle × 5 shots: Rest 7s (hidden) → Fire 3s (visible) + 2s overtime.',
-    h_vo:'Rapid Fire', hp_vo:'5 shots in a single window of 4s, 6s or 8s. +2s overtime after.',
-    simulate:'🎯 SIMULATE SHOT' }
+    h_seq:'Sequence', hp_seq:'1. Select event\n2. Set loading time\n3. Press START\n4. Audio commands guide the sequence\n5. Table records shots (mic required)',
+    h_over:'Overtime (+2s)', hp_over:'After each fire window, the app listens 2 extra seconds. Shots in this period are marked OVERTIME in orange.',
+    h_v25:'Speed 25m', hp_v25:'Cycle × 5 shots:\n→ REST 7s (arm at 45°, target hidden)\n→ FIRE 3s (target visible)\n→ +2s overtime',
+    h_audio:'Audio', hp_audio:'Voice commands from the original 25m Pistol Timer app (Paul\'s voice). Volume adjustable in Settings.',
+  }
 };
 
-// ═══ STATE ═══
+// ═══════════════════════════════
+// STATE
+// ═══════════════════════════════
 let lang = 'fr';
 let seqActive = false;
 let seqAbort  = false;
@@ -368,378 +468,445 @@ let fireWindowStart = 0;
 let fireWindowActive = false;
 let overtimeActive = false;
 let currentEventKey = 'prec25';
-let audioCtx = null;
 let micStream = null;
 let analyserNode = null;
+let audioCtxMic = null;
 let micActive = false;
 let micAnimFrame = null;
-let voiceList = [];
-let voiceLoaded = false;
 let cntInterval = null;
 let seqTimers = [];
 
-// ═══ INIT ═══
+// ═══════════════════════════════
+// INIT
+// ═══════════════════════════════
 window.addEventListener('load', () => {
-  loadPrefs(); loadVoices();
-  speechSynthesis.onvoiceschanged = loadVoices;
-  let r=0; const ri=setInterval(()=>{r++;loadVoices();if(r>=20||voiceLoaded)clearInterval(ri);},500);
-  buildAll(); applyLang(); updateShotTable();
+  loadPrefs();
+  buildAll();
+  applyLang();
+  updateShotTable();
 });
 
-// ═══ PREFS ═══
-function savePref(){
-  const g=id=>document.getElementById(id);
-  localStorage.setItem('pt_lang',lang);
-  localStorage.setItem('pt_load',g('set-loading-time').value);
-  localStorage.setItem('pt_dir',g('set-dir').value);
-  localStorage.setItem('pt_voice',g('set-voice').checked);
-  localStorage.setItem('pt_beep',g('set-beep').checked);
-  localStorage.setItem('pt_vol',g('set-vol').value);
-  localStorage.setItem('pt_speed',g('set-speed').value);
-  localStorage.setItem('pt_thresh',g('set-thresh').value);
-  localStorage.setItem('pt_echo',g('set-echo').value);
-  const vs=g('set-voice-sel'); if(vs.options[vs.selectedIndex]) localStorage.setItem('pt_vname',vs.options[vs.selectedIndex].text);
+// ═══════════════════════════════
+// PREFS
+// ═══════════════════════════════
+function savePref() {
+  localStorage.setItem('pt_lang',   lang);
+  localStorage.setItem('pt_load',   document.getElementById('set-loading-time').value);
+  localStorage.setItem('pt_dir',    document.getElementById('set-dir').value);
+  localStorage.setItem('pt_vol',    document.getElementById('set-vol').value);
+  localStorage.setItem('pt_thresh', document.getElementById('set-thresh').value);
+  localStorage.setItem('pt_echo',   document.getElementById('set-echo').value);
 }
-function loadPrefs(){
-  const p=(k,d)=>localStorage.getItem(k)??d, g=id=>document.getElementById(id);
-  lang=p('pt_lang','fr');
-  g('btn-fr').classList.toggle('active',lang==='fr'); g('btn-en').classList.toggle('active',lang==='en');
-  g('set-loading-time').value=p('pt_load','60');
-  g('set-dir').value=p('pt_dir','down');
-  g('set-voice').checked=p('pt_voice','true')!=='false';
-  g('set-beep').checked=p('pt_beep','true')!=='false';
-  const vol=p('pt_vol','80'); g('set-vol').value=vol; g('vol-val').textContent=vol+'%';
-  const spd=p('pt_speed','1'); g('set-speed').value=spd; g('speed-val').textContent=parseFloat(spd).toFixed(1)+'×';
-  const thr=p('pt_thresh','65'); g('set-thresh').value=thr; g('thresh-val').textContent=thr+'%';
-  const ech=p('pt_echo','200'); g('set-echo').value=ech; g('echo-val').textContent=ech+'ms';
-}
-
-// ═══ VOICE ═══
-function loadVoices(){
-  const all=speechSynthesis.getVoices(); if(!all.length)return;
-  let c=all.filter(v=>v.lang&&v.lang.startsWith('fr')); if(!c.length)c=all;
-  if(c.length===voiceList.length)return;
-  voiceLoaded=true; voiceList=c;
-  const sel=document.getElementById('set-voice-sel'), saved=localStorage.getItem('pt_vname')||'';
-  sel.innerHTML='';
-  voiceList.forEach((v,i)=>{const o=document.createElement('option');o.value=i;o.textContent=v.name+(v.localService?'':' ☁');if(v.name===saved)o.selected=true;sel.appendChild(o);});
-}
-function speak(text){
-  if(!document.getElementById('set-voice').checked)return;
-  try{
-    speechSynthesis.cancel();
-    setTimeout(()=>{try{
-      const u=new SpeechSynthesisUtterance(text); u.lang='fr-FR';
-      u.rate=parseFloat(document.getElementById('set-speed').value); u.volume=1;
-      const vs=document.getElementById('set-voice-sel');
-      if(voiceList[parseInt(vs.value)])u.voice=voiceList[parseInt(vs.value)];
-      if(speechSynthesis.paused)speechSynthesis.resume();
-      speechSynthesis.speak(u);
-      setTimeout(()=>{try{speechSynthesis.resume();}catch(e){}},100);
-    }catch(e){}},60);
-  }catch(e){}
+function loadPrefs() {
+  const p = (k, d) => localStorage.getItem(k) ?? d;
+  lang = p('pt_lang', 'fr');
+  document.getElementById('btn-fr').classList.toggle('active', lang === 'fr');
+  document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+  document.getElementById('set-loading-time').value = p('pt_load', '60');
+  document.getElementById('set-dir').value = p('pt_dir', 'down');
+  const vol = p('pt_vol','1');
+  document.getElementById('set-vol').value = vol;
+  document.getElementById('vol-val').textContent = Math.round(vol*100)+'%';
+  const thr = p('pt_thresh','65');
+  document.getElementById('set-thresh').value = thr;
+  document.getElementById('thresh-val').textContent = thr+'%';
+  const ech = p('pt_echo','200');
+  document.getElementById('set-echo').value = ech;
+  document.getElementById('echo-val').textContent = ech+'ms';
 }
 
-// ═══ AUDIO ═══
-function initAudio(){
-  try{if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();
-    if(audioCtx.state==='suspended')audioCtx.resume();}catch(e){}
-}
-function beep(freq,dur,vol){
-  if(!document.getElementById('set-beep').checked)return;
-  initAudio(); if(!audioCtx)return;
-  try{const o=audioCtx.createOscillator(),g=audioCtx.createGain();
-    o.connect(g);g.connect(audioCtx.destination);o.frequency.value=freq;o.type='sine';
-    const v=(parseInt(document.getElementById('set-vol').value)/100)*(vol||.6);
-    g.gain.setValueAtTime(v,audioCtx.currentTime);
-    g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+dur);
-    o.start();o.stop(audioCtx.currentTime+dur);}catch(e){}
-}
-function doubleBip(){beep(880,.2,.7);setTimeout(()=>beep(1100,.2,.7),250);if(navigator.vibrate)navigator.vibrate([100,80,100]);}
-function graveBip(){beep(220,.5,.6);if(navigator.vibrate)navigator.vibrate(300);}
-
-// ═══ MICRO ═══
-async function toggleMic(){
-  const on=document.getElementById('set-mic').checked;
-  if(on){
-    try{
-      micStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});
-      initAudio();
-      const src=audioCtx.createMediaStreamSource(micStream);
-      analyserNode=audioCtx.createAnalyser(); analyserNode.fftSize=256; analyserNode.smoothingTimeConstant=.2;
-      src.connect(analyserNode); micActive=true;
-      document.getElementById('mic-bar').style.display='flex'; micLoop();
+// ═══════════════════════════════
+// MICROPHONE
+// ═══════════════════════════════
+async function toggleMic() {
+  const on = document.getElementById('set-mic').checked;
+  if (on) {
+    try {
+      micStream = await navigator.mediaDevices.getUserMedia({
+        audio: { echoCancellation:false, noiseSuppression:false, autoGainControl:false }
+      });
+      audioCtxMic = new (window.AudioContext || window.webkitAudioContext)();
+      const src = audioCtxMic.createMediaStreamSource(micStream);
+      analyserNode = audioCtxMic.createAnalyser();
+      analyserNode.fftSize = 256;
+      analyserNode.smoothingTimeConstant = 0.2;
+      src.connect(analyserNode);
+      micActive = true;
+      document.getElementById('mic-bar').style.display = 'flex';
+      micLoop();
       showToast(T[lang].toastMicOn);
-    }catch(e){document.getElementById('set-mic').checked=false;showToast(T[lang].toastMicErr);}
-  }else{
-    micActive=false; cancelAnimationFrame(micAnimFrame);
-    if(micStream){micStream.getTracks().forEach(t=>t.stop());micStream=null;}
-    analyserNode=null; document.getElementById('mic-bar').style.display='none';
+    } catch(e) {
+      document.getElementById('set-mic').checked = false;
+      showToast(T[lang].toastMicErr);
+    }
+  } else {
+    micActive = false;
+    cancelAnimationFrame(micAnimFrame);
+    if (micStream) { micStream.getTracks().forEach(t => t.stop()); micStream = null; }
+    if (audioCtxMic) { try { audioCtxMic.close(); } catch(e){} audioCtxMic = null; }
+    analyserNode = null;
+    document.getElementById('mic-bar').style.display = 'none';
     showToast(T[lang].toastMicOff);
   }
 }
-function getMicLevel(){
-  if(!analyserNode)return 0;
-  const b=new Uint8Array(analyserNode.frequencyBinCount);
+
+function getMicLevel() {
+  if (!analyserNode) return 0;
+  const b = new Uint8Array(analyserNode.frequencyBinCount);
   analyserNode.getByteTimeDomainData(b);
-  let s=0; for(let i=0;i<b.length;i++){const v=(b[i]-128)/128;s+=v*v;}
-  return Math.sqrt(s/b.length);
-}
-function micLoop(){
-  if(!micActive)return;
-  const level=getMicLevel(), pct=Math.min(100,level*300);
-  document.getElementById('mic-fill').style.width=pct+'%';
-  document.getElementById('mic-db').textContent=Math.round(pct);
-  const thresh=parseInt(document.getElementById('set-thresh').value)/100;
-  const echo=parseInt(document.getElementById('set-echo').value);
-  const now=Date.now();
-  if(level>=thresh&&(now-lastShotMs)>=echo){
-    if(fireWindowActive||overtimeActive){lastShotMs=now;registerShot(now);}
-  }
-  micAnimFrame=requestAnimationFrame(micLoop);
+  let s = 0;
+  for (let i = 0; i < b.length; i++) { const v = (b[i]-128)/128; s += v*v; }
+  return Math.sqrt(s / b.length);
 }
 
-// ═══ SHOTS ═══
-function registerShot(nowMs){
-  const elapsed=(nowMs-fireWindowStart)/1000;
-  const split=shots.length>0?elapsed-shots[shots.length-1].elapsed:elapsed;
-  const isOver=overtimeActive&&!fireWindowActive;
-  shots.push({num:shots.length+1,elapsed,split,over:isOver});
+function micLoop() {
+  if (!micActive) return;
+  const level = getMicLevel();
+  const pct = Math.min(100, level * 300);
+  document.getElementById('mic-fill').style.width = pct + '%';
+  document.getElementById('mic-db').textContent = Math.round(pct);
+  const thresh = parseInt(document.getElementById('set-thresh').value) / 100;
+  const echo   = parseInt(document.getElementById('set-echo').value);
+  const now    = Date.now();
+  if (level >= thresh && (now - lastShotMs) >= echo) {
+    if (fireWindowActive || overtimeActive) {
+      lastShotMs = now;
+      registerShot(now);
+    }
+  }
+  micAnimFrame = requestAnimationFrame(micLoop);
+}
+
+// ═══════════════════════════════
+// SHOTS
+// ═══════════════════════════════
+function registerShot(nowMs) {
+  const elapsed = (nowMs - fireWindowStart) / 1000;
+  const split = shots.length > 0 ? elapsed - shots[shots.length-1].elapsed : elapsed;
+  const isOver = overtimeActive && !fireWindowActive;
+  shots.push({ num: shots.length+1, elapsed, split, over: isOver });
   updateShotTable();
 }
-function simulateShot(){
-  const now=Date.now(), echo=parseInt(document.getElementById('set-echo').value);
-  if((now-lastShotMs)<echo)return;
-  if(!fireWindowActive&&!overtimeActive)return;
-  lastShotMs=now; registerShot(now);
-  const btn=document.getElementById('btn-simulate');
-  btn.style.background='rgba(75,204,232,.4)'; setTimeout(()=>btn.style.background='',120);
-}
-function updateShotTable(){
-  const tb=document.getElementById('shot-tbody'),t=T[lang];
-  if(!shots.length){tb.innerHTML=`<tr><td colspan="4" style="color:var(--dim);text-align:center;padding:14px">${t.noShots}</td></tr>`;return;}
-  tb.innerHTML=shots.map(s=>`<tr>
-    <td>${s.num}</td><td>${s.elapsed.toFixed(2)}s</td><td>${s.split.toFixed(2)}s</td>
-    <td class="${s.over?'shot-overtime':'shot-ok'}">${s.over?t.noteOver:t.noteOk}</td>
+
+function updateShotTable() {
+  const tb = document.getElementById('shot-tbody'), t = T[lang];
+  if (!shots.length) {
+    tb.innerHTML = `<tr><td colspan="4" style="color:var(--dim);text-align:center;padding:14px">${t.noShots}</td></tr>`;
+    return;
+  }
+  tb.innerHTML = shots.map(s => `<tr>
+    <td>${s.num}</td>
+    <td>${s.elapsed.toFixed(2)}s</td>
+    <td>${s.split.toFixed(2)}s</td>
+    <td class="${s.over ? 'shot-over' : 'shot-ok'}">${s.over ? t.noteOver : t.noteOk}</td>
   </tr>`).join('');
 }
 
-// ═══ SEQUENCE HELPERS ═══
-function seqPause(ms){return new Promise(r=>{const id=setTimeout(r,ms);seqTimers.push(id);});}
-function setUI(phase,color,cmd,cmdColor,lr,lg,balle){
-  const t=T[lang];
-  document.getElementById('phase-label').textContent=t[phase]||phase;
-  document.getElementById('phase-label').className='phase-label '+(color||'');
-  document.getElementById('timer-number').className='timer-number '+(color||'');
-  document.getElementById('command-text').textContent=t[cmd]||cmd;
-  document.getElementById('command-text').className='command-text '+(cmdColor||'');
-  document.getElementById('light-red').className='light '+(lr?'red-on':'');
-  document.getElementById('light-green').className='light '+(lg?'green-on':'');
-  const bl=document.getElementById('balle-label');
-  if(balle){bl.textContent=balle;bl.className='balle-label '+(color||'');}
-  else{bl.textContent='';bl.className='balle-label';}
+// ═══════════════════════════════
+// SÉQUENCE HELPERS
+// ═══════════════════════════════
+function seqPause(ms) {
+  return new Promise(r => {
+    const id = setTimeout(r, ms);
+    seqTimers.push(id);
+  });
 }
-function startCnt(dur,color){
-  clearInterval(cntInterval);
-  const el=document.getElementById('timer-number');
-  const down=document.getElementById('set-dir').value==='down';
-  const t0=Date.now();
-  el.className='timer-number '+(color||'');
-  cntInterval=setInterval(()=>{
-    if(!seqActive){clearInterval(cntInterval);return;}
-    const e=(Date.now()-t0)/1000;
-    el.textContent=(down?Math.max(0,dur-e):e).toFixed(1);
-  },100);
-}
-function stopCnt(){clearInterval(cntInterval);}
 
-// ═══ SÉQUENCE PRINCIPALE ═══
-async function startSequence(){
-  if(seqActive)return;
-  initAudio(); if(!voiceLoaded)loadVoices();
-  seqActive=true; seqAbort=false; shots=[]; lastShotMs=-9999;
-  fireWindowActive=false; overtimeActive=false; seqTimers=[];
-  document.getElementById('btn-start').disabled=true;
-  document.getElementById('btn-stop').disabled=false;
-  document.getElementById('btn-simulate').style.display='none';
-  document.getElementById('rec-indicator').style.display='none';
+function setUI(phase, color, cmd, cmdColor, lr, lg, balle) {
+  const t = T[lang];
+  document.getElementById('phase-label').textContent = t[phase] || phase;
+  document.getElementById('phase-label').className = 'phase-label ' + (color || '');
+  document.getElementById('timer-number').className = 'timer-number ' + (color || '');
+  document.getElementById('command-text').textContent = t[cmd] || cmd;
+  document.getElementById('command-text').className = 'command-text ' + (cmdColor || '');
+  document.getElementById('light-red').className   = 'light ' + (lr ? 'red-on'   : '');
+  document.getElementById('light-green').className = 'light ' + (lg ? 'green-on' : '');
+  const bl = document.getElementById('balle-label');
+  if (balle) { bl.textContent = balle; bl.className = 'balle-label ' + (color||''); }
+  else        { bl.textContent = ''; bl.className = 'balle-label'; }
+}
+
+function startCnt(dur, color) {
+  clearInterval(cntInterval);
+  const el = document.getElementById('timer-number');
+  const down = document.getElementById('set-dir').value === 'down';
+  const t0 = Date.now();
+  el.className = 'timer-number ' + (color || '');
+  cntInterval = setInterval(() => {
+    if (!seqActive) { clearInterval(cntInterval); return; }
+    const e = (Date.now() - t0) / 1000;
+    el.textContent = (down ? Math.max(0, dur - e) : e).toFixed(1);
+  }, 100);
+}
+function stopCnt() { clearInterval(cntInterval); }
+
+// ═══════════════════════════════
+// SÉQUENCE PRINCIPALE
+// ═══════════════════════════════
+async function startSequence() {
+  if (seqActive) return;
+  preloadAudio();
+  seqActive = true; seqAbort = false;
+  shots = []; lastShotMs = -9999;
+  fireWindowActive = false; overtimeActive = false; seqTimers = [];
+  document.getElementById('btn-start').disabled = true;
+  document.getElementById('btn-stop').disabled  = false;
+  document.getElementById('rec-indicator').style.display = 'none';
   updateShotTable();
 
-  const ev=EVENTS_DEF.find(e=>e.key===currentEventKey);
-  if(!ev){stopSequence();return;}
-  const loadTime=parseInt(document.getElementById('set-loading-time').value);
+  const ev = EVENTS.find(e => e.key === currentEventKey);
+  if (!ev) { stopSequence(); return; }
+  const loadTime = parseInt(document.getElementById('set-loading-time').value);
 
-  try{if('wakeLock' in navigator)window._wl=await navigator.wakeLock.request('screen');}catch(e){}
+  try { if ('wakeLock' in navigator) window._wl = await navigator.wakeLock.request('screen'); } catch(e) {}
 
-  // 1. CHARGEMENT
-  setUI('phaseLoad','yellow','cmdLoad','yellow',true,false);
-  doubleBip(); speak('CHARGEZ');
-  startCnt(loadTime,'yellow'); await seqPause(loadTime*1000);
-  if(seqAbort)return finalize();
+  // 1. ANNONCE SÉRIE (si applicable)
+  if (ev.seriesAudio) {
+    await playAudio(ev.seriesAudio);
+    await seqPause(600);
+  }
+  if (seqAbort) return finalize();
 
-  // 2. ATTENTION
-  stopCnt(); graveBip(); await seqPause(300); doubleBip();
-  setUI('phaseAttn','red','cmdAttention','red',true,false);
-  speak('ATTENTION'); startCnt(7,'red'); await seqPause(7000);
-  if(seqAbort)return finalize();
-
-  // 3. ÉPREUVE
+  // 2. CHARGEMENT
+  await playAudio(SND.load);
+  setUI('phaseLoad', 'yellow', 'cmdLoad', 'yellow', true, false);
+  startCnt(loadTime, 'yellow');
+  await seqPause(loadTime * 1000);
   stopCnt();
-  if(ev.type==='fixed'||ev.type==='window') await runWindow(ev);
-  else if(ev.type==='turning37') await run37(ev);
-  if(seqAbort)return finalize();
+  if (seqAbort) return finalize();
 
-  // 4. STOP
-  stopCnt(); fireWindowActive=false; overtimeActive=false;
-  document.getElementById('btn-simulate').style.display='none';
-  document.getElementById('rec-indicator').style.display='none';
-  graveBip(); await seqPause(300); doubleBip();
-  setUI('phaseStop','red','cmdStop','red',true,false);
-  speak('STOP'); document.getElementById('timer-number').textContent='0.0';
-  await seqPause(1500); if(seqAbort)return finalize();
+  // 3. ATTENTION (7s)
+  await playAudio(SND.attention);
+  setUI('phaseAttn', 'red', 'cmdAttn', 'red', true, false);
+  startCnt(7, 'red');
+  await seqPause(7000);
+  stopCnt();
+  if (seqAbort) return finalize();
 
-  // 5. DÉCHARGEZ
-  doubleBip(); setUI('phaseDone','','cmdDecharge','',false,false);
-  speak('DÉCHARGEZ'); await seqPause(2000);
+  // 4. ÉPREUVE
+  if (ev.type === 'fixed' || ev.type === 'window') {
+    await runWindow(ev);
+  } else if (ev.type === 'turning37') {
+    await run37(ev);
+  }
+  if (seqAbort) return finalize();
+
+  // 5. STOP
+  stopCnt();
+  fireWindowActive = false; overtimeActive = false;
+  document.getElementById('rec-indicator').style.display = 'none';
+  await playAudio(SND.stop);
+  setUI('phaseDone', 'red', 'cmdStop', 'red', true, false);
+  document.getElementById('timer-number').textContent = '0.0';
+  await seqPause(1500);
+  if (seqAbort) return finalize();
+
+  // 6. DÉCHARGEZ
+  await playAudio(SND.unload);
+  setUI('phaseDone', '', 'cmdUnload', '', false, false);
+  await seqPause(2000);
+
   finalize();
 }
 
-async function runWindow(ev){
-  // Signal FEU
-  graveBip(); await seqPause(300); doubleBip();
-  setUI('phaseFire','green','cmdFire','green',false,true);
-  speak('FEU');
-  document.getElementById('rec-indicator').style.display='inline';
-  document.getElementById('btn-simulate').style.display='block';
-  fireWindowStart=Date.now(); fireWindowActive=true;
-  startCnt(ev.fireTime,'green'); await seqPause(ev.fireTime*1000);
-  fireWindowActive=false;
+// Fenêtre unique (fixed + VO)
+async function runWindow(ev) {
+  await playAudio(SND.start);
+  setUI('phaseFire', 'green', 'cmdFire', 'green', false, true);
+  document.getElementById('rec-indicator').style.display = 'inline';
+  fireWindowStart = Date.now();
+  fireWindowActive = true;
+  startCnt(ev.fireTime, 'green');
+  await seqPause(ev.fireTime * 1000);
+  fireWindowActive = false;
+
   // +2s overtime
-  overtimeActive=true;
-  setUI('phaseOver','red','cmdStop','red',true,false);
-  startCnt(ev.overtime,'red'); await seqPause(ev.overtime*1000);
-  overtimeActive=false;
-  document.getElementById('btn-simulate').style.display='none';
-  document.getElementById('rec-indicator').style.display='none';
+  overtimeActive = true;
+  setUI('phaseOver', 'red', 'cmdStop', 'red', true, false);
+  startCnt(ev.overtime, 'red');
+  await seqPause(ev.overtime * 1000);
+  overtimeActive = false;
+  document.getElementById('rec-indicator').style.display = 'none';
 }
 
-async function run37(ev){
-  const t=T[lang];
-  for(let b=0;b<5;b++){
-    if(seqAbort)return;
-    const lbl=`${t.balleOf} ${b+1} ${t.ofLbl}`;
+// Cycle 3s visible / 7s cachée
+async function run37(ev) {
+  const t = T[lang];
+  for (let b = 0; b < 5; b++) {
+    if (seqAbort) return;
+    const lbl = `${t.balleOf} ${b+1} ${t.ofLbl}`;
+
     // TIR 3s
-    graveBip(); await seqPause(300); doubleBip();
-    setUI('phaseFire','green','cmdCible','green',false,true,lbl);
-    speak('TIR');
-    document.getElementById('rec-indicator').style.display='inline';
-    document.getElementById('btn-simulate').style.display='block';
-    fireWindowStart=Date.now(); fireWindowActive=true;
-    startCnt(ev.fireTime,'green'); await seqPause(ev.fireTime*1000);
-    fireWindowActive=false;
+    await playAudio(SND.start);
+    setUI('phaseFire', 'green', 'cmdFire', 'green', false, true, lbl);
+    document.getElementById('rec-indicator').style.display = 'inline';
+    fireWindowStart = Date.now();
+    fireWindowActive = true;
+    startCnt(ev.fireTime, 'green');
+    await seqPause(ev.fireTime * 1000);
+    fireWindowActive = false;
+
     // +2s overtime
-    overtimeActive=true;
-    setUI('phaseOver','red','cmdStop','red',true,false,lbl);
-    startCnt(ev.overtime,'red'); await seqPause(ev.overtime*1000);
-    overtimeActive=false;
-    document.getElementById('btn-simulate').style.display='none';
-    document.getElementById('rec-indicator').style.display='none';
-    if(seqAbort||b===4)break;
+    overtimeActive = true;
+    setUI('phaseOver', 'red', 'cmdStop', 'red', true, false, lbl);
+    startCnt(ev.overtime, 'red');
+    await seqPause(ev.overtime * 1000);
+    overtimeActive = false;
+    document.getElementById('rec-indicator').style.display = 'none';
+
+    if (seqAbort || b === 4) break;
+
     // REPOS 7s
     stopCnt();
-    setUI('phaseRest','blue','cmdRepos','blue',false,false,lbl);
-    speak('REPOS'); startCnt(ev.restTime,'blue'); await seqPause(ev.restTime*1000);
+    setUI('phaseRest', 'blue', 'cmdRest', 'blue', false, false, lbl);
+    startCnt(ev.restTime, 'blue');
+    await seqPause(ev.restTime * 1000);
     stopCnt();
   }
 }
 
-function stopSequence(){
-  seqAbort=true; seqActive=false; fireWindowActive=false; overtimeActive=false;
-  seqTimers.forEach(t=>clearTimeout(t)); seqTimers=[];
-  stopCnt(); try{speechSynthesis.cancel();}catch(e){} graveBip(); finalize();
-}
-function finalize(){
-  seqActive=false; seqAbort=false; fireWindowActive=false; overtimeActive=false;
+function stopSequence() {
+  seqAbort = true; seqActive = false;
+  fireWindowActive = false; overtimeActive = false;
+  seqTimers.forEach(t => clearTimeout(t)); seqTimers = [];
   stopCnt();
-  document.getElementById('btn-start').disabled=false;
-  document.getElementById('btn-stop').disabled=true;
-  document.getElementById('btn-simulate').style.display='none';
-  document.getElementById('rec-indicator').style.display='none';
-  if(window._wl){try{window._wl.release();}catch(e){}window._wl=null;}
+  finalize();
 }
-function resetAll(){
-  stopSequence(); shots=[];
-  document.getElementById('timer-number').textContent='0.0';
-  document.getElementById('timer-number').className='timer-number';
-  document.getElementById('phase-label').textContent=T[lang].phaseWait;
-  document.getElementById('phase-label').className='phase-label';
-  document.getElementById('balle-label').textContent='';
-  document.getElementById('command-text').textContent=T[lang].cmdReady;
-  document.getElementById('command-text').className='command-text idle';
-  document.getElementById('light-red').className='light';
-  document.getElementById('light-green').className='light';
+
+function finalize() {
+  seqActive = false; seqAbort = false;
+  fireWindowActive = false; overtimeActive = false;
+  stopCnt();
+  document.getElementById('btn-start').disabled = false;
+  document.getElementById('btn-stop').disabled  = true;
+  document.getElementById('rec-indicator').style.display = 'none';
+  if (window._wl) { try { window._wl.release(); } catch(e){} window._wl = null; }
+}
+
+function resetAll() {
+  stopSequence();
+  shots = [];
+  const t = T[lang];
+  document.getElementById('timer-number').textContent = '0.0';
+  document.getElementById('timer-number').className = 'timer-number';
+  document.getElementById('phase-label').textContent = t.phaseWait;
+  document.getElementById('phase-label').className = 'phase-label';
+  document.getElementById('balle-label').textContent = '';
+  document.getElementById('command-text').textContent = t.cmdReady;
+  document.getElementById('command-text').className = 'command-text idle';
+  document.getElementById('light-red').className = 'light';
+  document.getElementById('light-green').className = 'light';
   updateShotTable();
 }
 
-// ═══ UI BUILDERS ═══
-function buildAll(){
-  const sel=document.getElementById('event-select'); sel.innerHTML='';
-  EVENTS_DEF.forEach(ev=>{const o=document.createElement('option');o.value=ev.key;
-    o.textContent=ev[lang].name+' — '+ev[lang].detail;if(ev.key===currentEventKey)o.selected=true;sel.appendChild(o);});
-  const list=document.getElementById('events-list'); list.innerHTML='';
-  EVENTS_DEF.forEach(ev=>{const d=document.createElement('div');d.className='event-card';
-    d.innerHTML=`<div><div class="event-card-name">${ev[lang].name}</div><div class="event-card-detail">${ev[lang].detail}</div></div><span class="event-card-arrow">›</span>`;
-    d.onclick=()=>selectEvent(ev.key);list.appendChild(d);});
+// ═══════════════════════════════
+// UI
+// ═══════════════════════════════
+function buildAll() {
+  const sel = document.getElementById('event-select');
+  sel.innerHTML = '';
+  EVENTS.forEach(ev => {
+    const o = document.createElement('option');
+    o.value = ev.key;
+    o.textContent = ev[lang].name + ' — ' + ev[lang].detail;
+    if (ev.key === currentEventKey) o.selected = true;
+    sel.appendChild(o);
+  });
+  const list = document.getElementById('events-list');
+  list.innerHTML = '';
+  EVENTS.forEach(ev => {
+    const d = document.createElement('div');
+    d.className = 'event-card';
+    d.innerHTML = `<div>
+      <div class="event-card-name">${ev[lang].name}</div>
+      <div class="event-card-detail">${ev[lang].detail}</div>
+    </div><span style="color:var(--dim);font-size:18px">›</span>`;
+    d.onclick = () => selectEvent(ev.key);
+    list.appendChild(d);
+  });
 }
-function selectEvent(key){currentEventKey=key;document.getElementById('event-select').value=key;showPage('timer');resetAll();showToast(T[lang].toastEvt);}
-function onEventChange(){currentEventKey=document.getElementById('event-select').value;if(!seqActive)resetAll();}
 
-// ═══ LANG ═══
-function setLang(l){
-  lang=l;
-  document.getElementById('btn-fr').classList.toggle('active',l==='fr');
-  document.getElementById('btn-en').classList.toggle('active',l==='en');
+function selectEvent(key) {
+  currentEventKey = key;
+  document.getElementById('event-select').value = key;
+  showPage('timer');
+  resetAll();
+  showToast(T[lang].toastEvt);
+}
+
+function onEventChange() {
+  currentEventKey = document.getElementById('event-select').value;
+  if (!seqActive) resetAll();
+}
+
+function setLang(l) {
+  lang = l;
+  document.getElementById('btn-fr').classList.toggle('active', l === 'fr');
+  document.getElementById('btn-en').classList.toggle('active', l === 'en');
   savePref(); buildAll(); applyLang(); updateShotTable();
 }
-function applyLang(){
-  const t=T[lang], s=id=>document.getElementById(id);
-  s('app-title').textContent=t.appTitle; s('tab-timer').textContent=t.tabTimer;
-  s('tab-events').textContent=t.tabEvents; s('tab-settings').textContent=t.tabSettings;
-  s('tab-help').textContent=t.tabHelp; s('btn-start').textContent=t.btnStart;
-  s('btn-stop').textContent=t.btnStop; s('btn-reset').textContent=t.btnReset;
-  s('btn-simulate').textContent=t.simulate; s('lbl-shots').textContent=t.lblShots;
-  s('th-num').textContent=t.thNum; s('th-time').textContent=t.thTime;
-  s('th-split').textContent=t.thSplit; s('th-note').textContent=t.thNote;
-  s('lbl-events-title').textContent=t.lbl_events_title;
-  s('sh-general').textContent=t.sh_general; s('sl-loading').textContent=t.sl_loading;
-  s('sd-loading').textContent=t.sd_loading; s('sl-dir').textContent=t.sl_dir;
-  s('set-dir').options[0].textContent=t.dir_down; s('set-dir').options[1].textContent=t.dir_up;
-  s('sh-voice').textContent=t.sh_voice; s('sl-voice').textContent=t.sl_voice;
-  s('sd-voice').textContent=t.sd_voice; s('sl-voice-sel').textContent=t.sl_voice_sel;
-  s('sl-speed').textContent=t.sl_speed; s('sh-sound').textContent=t.sh_sound;
-  s('sl-beep').textContent=t.sl_beep; s('sl-vol').textContent=t.sl_vol;
-  s('sh-mic').textContent=t.sh_mic; s('sl-mic').textContent=t.sl_mic;
-  s('sd-mic').textContent=t.sd_mic; s('sl-thresh').textContent=t.sl_thresh;
-  s('sl-echo').textContent=t.sl_echo; s('sd-echo').textContent=t.sd_echo;
-  s('h-usage').textContent=t.h_usage; s('hp-usage').textContent=t.hp_usage;
-  s('h-overtime').textContent=t.h_overtime; s('hp-overtime').textContent=t.hp_overtime;
-  s('h-vitesse').textContent=t.h_vitesse; s('hp-vitesse').textContent=t.hp_vitesse;
-  s('h-vo').textContent=t.h_vo; s('hp-vo').textContent=t.hp_vo;
-  if(!seqActive){s('phase-label').textContent=t.phaseWait;s('command-text').textContent=t.cmdReady;}
+
+function applyLang() {
+  const t = T[lang], s = id => document.getElementById(id);
+  s('app-title').textContent    = t.appTitle;
+  s('tab-timer').textContent    = t.tabTimer;
+  s('tab-events').textContent   = t.tabEvents;
+  s('tab-settings').textContent = t.tabSettings;
+  s('tab-help').textContent     = t.tabHelp;
+  s('btn-start').textContent    = t.btnStart;
+  s('btn-stop').textContent     = t.btnStop;
+  s('btn-reset').textContent    = t.btnReset;
+  s('lbl-shots').textContent    = t.lblShots;
+  s('th-num').textContent       = t.thNum;
+  s('th-time').textContent      = t.thTime;
+  s('th-split').textContent     = t.thSplit;
+  s('th-note').textContent      = t.thNote;
+  s('lbl-events-title').textContent = t.lbl_events_title;
+  s('sh-general').textContent   = t.sh_general;
+  s('sl-loading').textContent   = t.sl_loading;
+  s('sd-loading').textContent   = t.sd_loading;
+  s('sl-dir').textContent       = t.sl_dir;
+  s('set-dir').options[0].textContent = t.dir_down;
+  s('set-dir').options[1].textContent = t.dir_up;
+  s('sl-vol').textContent       = t.sl_vol;
+  s('sh-mic').textContent       = t.sh_mic;
+  s('sl-mic').textContent       = t.sl_mic;
+  s('sd-mic').textContent       = t.sd_mic;
+  s('sl-thresh').textContent    = t.sl_thresh;
+  s('sl-echo').textContent      = t.sl_echo;
+  s('sd-echo').textContent      = t.sd_echo;
+  s('h-seq').textContent        = t.h_seq;
+  s('hp-seq').textContent       = t.hp_seq;
+  s('h-over').textContent       = t.h_over;
+  s('hp-over').textContent      = t.hp_over;
+  s('h-v25').textContent        = t.h_v25;
+  s('hp-v25').textContent       = t.hp_v25;
+  s('h-audio').textContent      = t.h_audio;
+  s('hp-audio').textContent     = t.hp_audio;
+  if (!seqActive) {
+    s('phase-label').textContent  = t.phaseWait;
+    s('command-text').textContent = t.cmdReady;
+  }
 }
-function showPage(id){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t  => t.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
   document.getElementById('tab-'+id).classList.add('active');
 }
-function showToast(msg){
-  const el=document.getElementById('toast'); el.textContent=msg;
-  el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),2500);
+
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2500);
 }
 </script>
+
 <script>
-if('serviceWorker' in navigator) window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js'));
+if ('serviceWorker' in navigator)
+  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));
 </script>
 </body>
 </html>
