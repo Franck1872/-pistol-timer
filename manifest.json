@@ -1,0 +1,15 @@
+{
+  "name": "Minuterie Pistolet 25m",
+  "short_name": "Pistolet 25m",
+  "description": "Minuterie pour tir au pistolet 25m — Précision & Feu rapide",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a0c0f",
+  "theme_color": "#e8b84b",
+  "lang": "fr",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
