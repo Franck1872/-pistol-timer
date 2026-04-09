@@ -1,4 +1,5 @@
-const CACHE = 'pistol-timer-v1';
+const VERSION = 'pistol-timer-v1.05';
+
 const FILES = [
   './',
   './index.html',
@@ -7,20 +8,46 @@ const FILES = [
   './icons/icon-512.png'
 ];
 
+// Installation : mise en cache de tous les fichiers
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)));
-  self.skipWaiting();
-});
-
-self.addEventListener('activate', e => {
-  e.waitUntil(caches.keys().then(keys =>
-    Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
-  ));
-  self.clients.claim();
-});
-
-self.addEventListener('fetch', e => {
-  e.respondWith(
-    caches.match(e.request).then(r => r || fetch(e.request))
+  e.waitUntil(
+    caches.open(VERSION).then(c => c.addAll(FILES))
   );
+  self.skipWaiting(); // Active immédiatement sans attendre
+});
+
+// Activation : supprime les anciens caches
+self.addEventListener('activate', e => {
+  e.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(keys.filter(k => k !== VERSION).map(k => {
+        console.log('[SW] Suppression ancien cache:', k);
+        return caches.delete(k);
+      }))
+    ).then(() => self.clients.claim())
+  );
+});
+
+// Fetch : network-first pour index.html, cache-first pour le reste
+self.addEventListener('fetch', e => {
+  const url = new URL(e.request.url);
+  const isHTML = url.pathname.endsWith('.html') || url.pathname.endsWith('/');
+
+  if (isHTML) {
+    // Network-first pour l'HTML : toujours la dernière version
+    e.respondWith(
+      fetch(e.request)
+        .then(res => {
+          const clone = res.clone();
+          caches.open(VERSION).then(c => c.put(e.request, clone));
+          return res;
+        })
+        .catch(() => caches.match(e.request))
+    );
+  } else {
+    // Cache-first pour les autres ressources (audio, icônes...)
+    e.respondWith(
+      caches.match(e.request).then(r => r || fetch(e.request))
+    );
+  }
 });
