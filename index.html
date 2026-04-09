@@ -24,7 +24,9 @@
 body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:16px;min-height:100vh;overflow-x:hidden;}
 header{background:var(--panel);border-bottom:1px solid var(--border);padding:0 16px;height:52px;
   display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
-header h1{font-family:var(--head);font-size:16px;font-weight:600;color:var(--accent);letter-spacing:2px;text-transform:uppercase;}
+.header-left{display:flex;flex-direction:column;}
+header h1{font-family:var(--head);font-size:16px;font-weight:600;color:var(--accent);letter-spacing:2px;text-transform:uppercase;line-height:1.1;}
+.version-tag{font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:1px;}
 .lang-btn{display:flex;gap:4px;}
 .lang-btn button{background:none;border:1px solid var(--border);color:var(--dim);padding:3px 9px;
   border-radius:4px;font-family:var(--body);font-size:12px;cursor:pointer;transition:all .2s;}
@@ -73,10 +75,11 @@ select{background:var(--panel2);border:1px solid var(--border);color:var(--text)
 .light.green-on{background:var(--green);border-color:var(--green);box-shadow:0 0 12px var(--green);}
 .mic-bar{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--panel2);
   border:1px solid var(--border);border-radius:8px;margin-bottom:12px;}
-.mic-level-track{flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden;}
-.mic-level-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--green),var(--accent),var(--red));
-  border-radius:3px;transition:width .05s;}
-.mic-label{font-family:var(--mono);font-size:12px;color:var(--dim);width:28px;text-align:right;}
+.mic-level-track{flex:1;height:8px;background:var(--border);border-radius:4px;overflow:hidden;}
+.mic-level-fill{height:100%;width:0%;border-radius:4px;transition:width .03s;}
+.mic-level-fill.normal{background:linear-gradient(90deg,var(--green),var(--accent));}
+.mic-level-fill.peak{background:var(--red);}
+.mic-label{font-family:var(--mono);font-size:11px;color:var(--dim);width:32px;text-align:right;}
 .rec-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--red);
   margin-right:5px;animation:blink 1s infinite;}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
@@ -134,13 +137,20 @@ select{background:var(--panel2);border:1px solid var(--border);color:var(--text)
   background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:10px 20px;
   font-size:14px;color:var(--text);transition:transform .3s;z-index:999;white-space:nowrap;}
 .toast.show{transform:translateX(-50%) translateY(0);}
+/* Bouton mise à jour */
+.update-banner{display:none;background:rgba(232,184,75,.12);border:1px solid var(--accent);
+  border-radius:8px;padding:10px 14px;margin-bottom:12px;text-align:center;cursor:pointer;}
+.update-banner span{font-size:13px;color:var(--accent);font-family:var(--body);font-weight:600;}
 @media(max-width:380px){.timer-number{font-size:66px;}}
 </style>
 </head>
 <body>
 
 <header>
-  <h1 id="app-title">Minuterie Pistolet</h1>
+  <div class="header-left">
+    <h1 id="app-title">Minuterie Pistolet</h1>
+    <span class="version-tag" id="version-tag">v1.05</span>
+  </div>
   <div class="lang-btn">
     <button id="btn-fr" class="active" onclick="setLang('fr')">FR</button>
     <button id="btn-en" onclick="setLang('en')">EN</button>
@@ -156,6 +166,11 @@ select{background:var(--panel2);border:1px solid var(--border);color:var(--text)
 
 <!-- MINUTERIE -->
 <div class="page active" id="page-timer">
+
+  <div class="update-banner" id="update-banner" onclick="doUpdate()">
+    <span id="update-msg">🔄 Nouvelle version disponible — Appuyez pour mettre à jour</span>
+  </div>
+
   <div style="margin-bottom:12px">
     <select id="event-select" onchange="onEventChange()"></select>
   </div>
@@ -173,7 +188,7 @@ select{background:var(--panel2);border:1px solid var(--border);color:var(--text)
   </div>
   <div id="mic-bar" class="mic-bar" style="display:none">
     <span style="font-size:15px">🎙</span>
-    <div class="mic-level-track"><div class="mic-level-fill" id="mic-fill"></div></div>
+    <div class="mic-level-track"><div class="mic-level-fill normal" id="mic-fill"></div></div>
     <span class="mic-label" id="mic-db">—</span>
     <span id="rec-indicator" style="display:none;font-family:var(--mono);font-size:11px;color:var(--red)">
       <span class="rec-dot"></span>REC
@@ -211,7 +226,7 @@ select{background:var(--panel2);border:1px solid var(--border);color:var(--text)
     <div class="settings-row">
       <div>
         <div class="settings-label" id="sl-loading">Temps de préparation</div>
-        <div class="settings-desc" id="sd-loading">Phase 1 — avant le signal CHARGEZ</div>
+        <div class="settings-desc" id="sd-loading">Phase 1 — avant CHARGEZ</div>
       </div>
       <select id="set-loading-time" onchange="savePref()">
         <option value="15">15s</option>
@@ -235,6 +250,7 @@ select{background:var(--panel2);border:1px solid var(--border);color:var(--text)
       <span class="range-val" id="vol-val">100%</span>
     </div>
   </div>
+
   <div class="settings-section">
     <div class="settings-header" id="sh-mic">Microphone</div>
     <div class="settings-row">
@@ -248,19 +264,22 @@ select{background:var(--panel2);border:1px solid var(--border);color:var(--text)
       </label>
     </div>
     <div class="settings-row">
-      <div><div class="settings-label" id="sl-thresh">Seuil de sensibilité</div></div>
-      <input type="range" id="set-thresh" min="10" max="95" value="65"
+      <div>
+        <div class="settings-label" id="sl-thresh">Seuil de détection</div>
+        <div class="settings-desc" id="sd-thresh">Monter si faux positifs, baisser si coups manqués</div>
+      </div>
+      <input type="range" id="set-thresh" min="5" max="90" value="30"
         oninput="document.getElementById('thresh-val').textContent=this.value+'%';savePref()">
-      <span class="range-val" id="thresh-val">65%</span>
+      <span class="range-val" id="thresh-val">30%</span>
     </div>
     <div class="settings-row">
       <div>
         <div class="settings-label" id="sl-echo">Délai anti-rebond</div>
         <div class="settings-desc" id="sd-echo">Entre deux coups détectés</div>
       </div>
-      <input type="range" id="set-echo" min="50" max="800" step="10" value="200"
+      <input type="range" id="set-echo" min="50" max="800" step="10" value="300"
         oninput="document.getElementById('echo-val').textContent=this.value+'ms';savePref()">
-      <span class="range-val" id="echo-val">200ms</span>
+      <span class="range-val" id="echo-val">300ms</span>
     </div>
   </div>
 </div>
@@ -290,37 +309,47 @@ Bip → 🟢 TIR 3s + 2s écoute (= 5s micro ouvert)
   </div>
   <div class="help-block">
     <h3 id="h-over">Hors-temps</h3>
-    <p id="hp-over">Les 2s après la fenêtre de tir : le micro reste ouvert. Les coups détectés sont marqués HORS TEMPS en orange. Ce temps n'est pas affiché dans le chrono.</p>
+    <p id="hp-over">Les 2s après la fenêtre de tir : micro ouvert. Les coups détectés sont marqués HORS TEMPS en orange. Ce temps n'est pas affiché dans le chrono.</p>
+  </div>
+  <div class="help-block">
+    <h3 id="h-mic-tip">Réglage du microphone</h3>
+    <p id="hp-mic-tip">La détection utilise le pic de pression sonore (méthode adaptée aux détonations). Seuil par défaut : 30%. Augmentez si des sons parasites sont détectés, diminuez si des coups sont manqués. Le délai anti-rebond évite qu'un seul coup soit compté deux fois.</p>
+  </div>
+  <div class="help-block">
+    <h3>Version</h3>
+    <p id="hp-version">v1.05 — Pour forcer la mise à jour sur votre téléphone : rechargez la page (glisser vers le bas dans Chrome).</p>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
+const APP_VERSION = 'v1.05';
+
 // ═══ DISCIPLINES ═══
 const EVENTS = [
-  { key:'prec25',  type:'fixed',     fireTime:300, overtime:2, seriesAudio:null,
+  { key:'prec25',  type:'fixed',  fireTime:300, overtime:2, seriesAudio:null,
     fr:{name:'Précision 25m',  detail:'5 coups — 5 min — Cibles fixes'},
     en:{name:'Precision 25m',  detail:'5 shots — 5 min — Fixed targets'} },
-  { key:'vit25',   type:'vit37',     fireTime:3,   waitTime:7, overtime:2, seriesAudio:null,
+  { key:'vit25',   type:'vit37', fireTime:3, waitTime:7, overtime:2, seriesAudio:null,
     fr:{name:'Vitesse 25m',    detail:'5 balles — 3s tir / 7s bras à 45°'},
     en:{name:'Speed 25m',      detail:'5 shots — 3s fire / 7s arm at 45°'} },
-  { key:'vo4',     type:'window',    fireTime:4,   overtime:2, seriesAudio:'raw/paul_series_4.ogg',
+  { key:'vo4',     type:'fixed', fireTime:4,  overtime:2, seriesAudio:'raw/paul_series_4.ogg',
     fr:{name:'V.O 4s',         detail:'5 coups — 4 secondes — Cibles tournantes'},
     en:{name:'R.F 4s',         detail:'5 shots — 4 seconds — Turning targets'} },
-  { key:'vo6',     type:'window',    fireTime:6,   overtime:2, seriesAudio:'raw/paul_series_6.ogg',
+  { key:'vo6',     type:'fixed', fireTime:6,  overtime:2, seriesAudio:'raw/paul_series_6.ogg',
     fr:{name:'V.O 6s',         detail:'5 coups — 6 secondes — Cibles tournantes'},
     en:{name:'R.F 6s',         detail:'5 shots — 6 seconds — Turning targets'} },
-  { key:'vo8',     type:'window',    fireTime:8,   overtime:2, seriesAudio:'raw/paul_series_8.ogg',
+  { key:'vo8',     type:'fixed', fireTime:8,  overtime:2, seriesAudio:'raw/paul_series_8.ogg',
     fr:{name:'V.O 8s',         detail:'5 coups — 8 secondes — Cibles tournantes'},
     en:{name:'R.F 8s',         detail:'5 shots — 8 seconds — Turning targets'} },
-  { key:'std150',  type:'window',    fireTime:150, overtime:2, seriesAudio:'raw/paul_series_150.ogg',
+  { key:'std150',  type:'fixed', fireTime:150, overtime:2, seriesAudio:'raw/paul_series_150.ogg',
     fr:{name:'Standard 150s',  detail:'5 coups — 150 secondes — Cibles fixes'},
     en:{name:'Standard 150s',  detail:'5 shots — 150 seconds — Fixed targets'} },
-  { key:'std20',   type:'window',    fireTime:20,  overtime:2, seriesAudio:'raw/paul_series_20.ogg',
+  { key:'std20',   type:'fixed', fireTime:20,  overtime:2, seriesAudio:'raw/paul_series_20.ogg',
     fr:{name:'Standard 20s',   detail:'5 coups — 20 secondes — Cibles fixes'},
     en:{name:'Standard 20s',   detail:'5 shots — 20 seconds — Fixed targets'} },
-  { key:'std10',   type:'window',    fireTime:10,  overtime:2, seriesAudio:'raw/paul_series_10.ogg',
+  { key:'std10',   type:'fixed', fireTime:10,  overtime:2, seriesAudio:'raw/paul_series_10.ogg',
     fr:{name:'Standard 10s',   detail:'5 coups — 10 secondes — Cibles fixes'},
     en:{name:'Standard 10s',   detail:'5 shots — 10 seconds — Fixed targets'} },
 ];
@@ -336,14 +365,13 @@ const SND = {
 
 function playAudio(src) {
   return new Promise(resolve => {
-    if (!src) { resolve(); return; }
+    if (!src){resolve();return;}
     try {
       const a = new Audio(src);
       a.volume = parseFloat(document.getElementById('set-vol').value);
-      a.onended = resolve;
-      a.onerror = resolve;
+      a.onended = resolve; a.onerror = resolve;
       a.play().catch(resolve);
-    } catch(e) { resolve(); }
+    } catch(e){resolve();}
   });
 }
 
@@ -351,91 +379,113 @@ function playAudio(src) {
 const T = {
   fr:{
     appTitle:'Minuterie Pistolet',
-    tabTimer:'Minuterie', tabDisc:'Discipline', tabSettings:'Réglages', tabHelp:'Aide',
-    btnStart:'▶ DÉPART', btnStop:'■ STOP', btnReset:'↺ RESET',
-    cmdReady:'— PRÊT —', cmdLoad:'CHARGEZ', cmdAttn:'ATTENTION',
-    cmdTir:'TIR', cmdStop:'STOP', cmdUnload:'DÉCHARGEZ',
-    cmdWait:'BRAS À 45°', cmdOver:'HORS-TEMPS',
-    phaseWait:'EN ATTENTE', phasePrep:'PRÉPARATION', phaseAttn:'ATTENTION',
-    phaseTir:'TIR', phaseWait45:'BRAS À 45°', phaseOver:'HORS-TEMPS', phaseDone:'TERMINÉ',
-    lblShots:'Coups détectés', thNum:'#', thTime:'Temps', thSplit:'Split', thNote:'Note',
-    noShots:'Aucun coup enregistré', noteOk:'OK', noteOver:'HORS TEMPS',
-    balleOf:'Balle', ofLbl:'/ 5',
-    toastMicOn:'🎙 Microphone activé', toastMicOff:'🔇 Microphone désactivé',
-    toastMicErr:'⚠ Accès micro refusé', toastEvt:'✓ Discipline sélectionnée',
+    tabTimer:'Minuterie',tabDisc:'Discipline',tabSettings:'Réglages',tabHelp:'Aide',
+    btnStart:'▶ DÉPART',btnStop:'■ STOP',btnReset:'↺ RESET',
+    cmdReady:'— PRÊT —',cmdLoad:'CHARGEZ',cmdAttn:'ATTENTION',
+    cmdTir:'TIR',cmdStop:'STOP',cmdUnload:'DÉCHARGEZ',cmdWait:'BRAS À 45°',cmdOver:'HORS-TEMPS',
+    phaseWait:'EN ATTENTE',phasePrep:'PRÉPARATION',phaseAttn:'ATTENTION',
+    phaseTir:'TIR',phaseWait45:'BRAS À 45°',phaseOver:'HORS-TEMPS',phaseDone:'TERMINÉ',
+    lblShots:'Coups détectés',thNum:'#',thTime:'Temps',thSplit:'Split',thNote:'Note',
+    noShots:'Aucun coup enregistré',noteOk:'OK',noteOver:'HORS TEMPS',
+    balleOf:'Balle',ofLbl:'/ 5',
+    toastMicOn:'🎙 Microphone activé',toastMicOff:'🔇 Microphone désactivé',
+    toastMicErr:'⚠ Accès micro refusé',toastEvt:'✓ Discipline sélectionnée',
     lbl_disc_title:'Disciplines disponibles',
     sh_general:'Général',
-    sl_loading:'Temps de préparation', sd_loading:'Phase 1 — avant CHARGEZ',
-    sl_dir:'Direction du chrono', dir_down:'Décompte ↓', dir_up:'Comptage ↑',
+    sl_loading:'Temps de préparation',sd_loading:'Phase 1 — avant CHARGEZ',
+    sl_dir:'Direction du chrono',dir_down:'Décompte ↓',dir_up:'Comptage ↑',
     sl_vol:'Volume des commandes',
-    sh_mic:'Microphone', sl_mic:'Détection des coups', sd_mic:'Microphone pour détecter les tirs',
-    sl_thresh:'Seuil de sensibilité', sl_echo:'Délai anti-rebond', sd_echo:'Entre deux coups détectés',
-    h_seq:'Séquence commune',
-    hp_seq:'Phase 1 — Préparation : CHARGEZ + décompte (15s à 120s)\nPhase 2 — ATTENTION : 7 secondes fixes\nPhase 3 — Discipline (voir ci-dessous)\nPhase 4 — STOP puis DÉCHARGEZ',
-    h_prec:'Précision 25m',   hp_prec:'Bip → 🟢 TIR 300s → Bip → 🔴 +2s écoute → STOP',
-    h_vit:'Vitesse 25m — cycle × 5',
-    hp_vit:'Bip → 🔴 Bras à 45° 7s\nBip → 🟢 TIR 3s + 2s écoute (= 5s micro ouvert)\n→ répété 5 fois → STOP',
-    h_vo:'V.O et Standard',   hp_vo:'Annonce série → Bip → 🟢 TIR Xs → Bip → 🔴 +2s écoute → STOP',
-    h_over:'Hors-temps',
-    hp_over:'Les 2s après la fenêtre de tir : le micro reste ouvert. Les coups détectés sont marqués HORS TEMPS en orange. Ce temps n\'est pas affiché dans le chrono.',
+    sh_mic:'Microphone',sl_mic:'Détection des coups',sd_mic:'Microphone pour détecter les tirs',
+    sl_thresh:'Seuil de détection',sd_thresh:'Monter si faux positifs, baisser si coups manqués',
+    sl_echo:'Délai anti-rebond',sd_echo:'Entre deux coups détectés',
+    updateMsg:'🔄 Nouvelle version disponible — Appuyez pour mettre à jour',
+    h_seq:'Séquence commune',hp_seq:'Phase 1 — Préparation : CHARGEZ + décompte (15s à 120s)\nPhase 2 — ATTENTION : 7 secondes fixes\nPhase 3 — Discipline\nPhase 4 — STOP puis DÉCHARGEZ',
+    h_prec:'Précision 25m',hp_prec:'Bip → 🟢 TIR 300s → Bip → 🔴 +2s écoute → STOP',
+    h_vit:'Vitesse 25m — cycle × 5',hp_vit:'Bip → 🔴 Bras à 45° 7s\nBip → 🟢 TIR 3s + 2s écoute (= 5s micro ouvert)\n→ répété 5 fois → STOP',
+    h_vo:'V.O et Standard',hp_vo:'Annonce série → Bip → 🟢 TIR Xs → Bip → 🔴 +2s écoute → STOP',
+    h_over:'Hors-temps',hp_over:'Les 2s après la fenêtre de tir : micro ouvert. Coups marqués HORS TEMPS en orange.',
+    h_mic_tip:'Réglage du microphone',hp_mic_tip:'Détection par pic de pression sonore. Seuil 30% par défaut. Augmentez si faux positifs, diminuez si coups manqués.',
   },
   en:{
     appTitle:'Pistol Timer',
-    tabTimer:'Timer', tabDisc:'Discipline', tabSettings:'Settings', tabHelp:'Help',
-    btnStart:'▶ START', btnStop:'■ STOP', btnReset:'↺ RESET',
-    cmdReady:'— READY —', cmdLoad:'LOAD', cmdAttn:'ATTENTION',
-    cmdTir:'FIRE', cmdStop:'STOP', cmdUnload:'UNLOAD',
-    cmdWait:'ARM AT 45°', cmdOver:'OVERTIME',
-    phaseWait:'STANDBY', phasePrep:'PREPARATION', phaseAttn:'ATTENTION',
-    phaseTir:'FIRE', phaseWait45:'ARM AT 45°', phaseOver:'OVERTIME', phaseDone:'DONE',
-    lblShots:'Detected shots', thNum:'#', thTime:'Time', thSplit:'Split', thNote:'Note',
-    noShots:'No shots registered', noteOk:'OK', noteOver:'OVERTIME',
-    balleOf:'Shot', ofLbl:'/ 5',
-    toastMicOn:'🎙 Microphone on', toastMicOff:'🔇 Microphone off',
-    toastMicErr:'⚠ Mic access denied', toastEvt:'✓ Discipline selected',
+    tabTimer:'Timer',tabDisc:'Discipline',tabSettings:'Settings',tabHelp:'Help',
+    btnStart:'▶ START',btnStop:'■ STOP',btnReset:'↺ RESET',
+    cmdReady:'— READY —',cmdLoad:'LOAD',cmdAttn:'ATTENTION',
+    cmdTir:'FIRE',cmdStop:'STOP',cmdUnload:'UNLOAD',cmdWait:'ARM AT 45°',cmdOver:'OVERTIME',
+    phaseWait:'STANDBY',phasePrep:'PREPARATION',phaseAttn:'ATTENTION',
+    phaseTir:'FIRE',phaseWait45:'ARM AT 45°',phaseOver:'OVERTIME',phaseDone:'DONE',
+    lblShots:'Detected shots',thNum:'#',thTime:'Time',thSplit:'Split',thNote:'Note',
+    noShots:'No shots registered',noteOk:'OK',noteOver:'OVERTIME',
+    balleOf:'Shot',ofLbl:'/ 5',
+    toastMicOn:'🎙 Microphone on',toastMicOff:'🔇 Microphone off',
+    toastMicErr:'⚠ Mic access denied',toastEvt:'✓ Discipline selected',
     lbl_disc_title:'Available disciplines',
     sh_general:'General',
-    sl_loading:'Preparation time', sd_loading:'Phase 1 — before LOAD',
-    sl_dir:'Timer direction', dir_down:'Count down ↓', dir_up:'Count up ↑',
+    sl_loading:'Preparation time',sd_loading:'Phase 1 — before LOAD',
+    sl_dir:'Timer direction',dir_down:'Count down ↓',dir_up:'Count up ↑',
     sl_vol:'Command volume',
-    sh_mic:'Microphone', sl_mic:'Shot detection', sd_mic:'Microphone to detect shots',
-    sl_thresh:'Sensitivity threshold', sl_echo:'Anti-bounce delay', sd_echo:'Between two shots',
-    h_seq:'Common sequence',
-    hp_seq:'Phase 1 — Preparation: LOAD + countdown (15s to 120s)\nPhase 2 — ATTENTION: 7 seconds\nPhase 3 — Discipline (see below)\nPhase 4 — STOP then UNLOAD',
-    h_prec:'Precision 25m',   hp_prec:'Beep → 🟢 FIRE 300s → Beep → 🔴 +2s listen → STOP',
-    h_vit:'Speed 25m — cycle × 5',
-    hp_vit:'Beep → 🔴 Arm at 45° 7s\nBeep → 🟢 FIRE 3s + 2s listen (= 5s mic open)\n→ repeated 5 times → STOP',
-    h_vo:'R.F and Standard',  hp_vo:'Series announce → Beep → 🟢 FIRE Xs → Beep → 🔴 +2s listen → STOP',
-    h_over:'Overtime',
-    hp_over:'2s after the fire window: mic stays open. Shots detected are marked OVERTIME in orange. This time is not shown in the countdown.',
+    sh_mic:'Microphone',sl_mic:'Shot detection',sd_mic:'Microphone to detect shots',
+    sl_thresh:'Detection threshold',sd_thresh:'Raise if false positives, lower if shots missed',
+    sl_echo:'Anti-bounce delay',sd_echo:'Between two detected shots',
+    updateMsg:'🔄 New version available — Tap to update',
+    h_seq:'Common sequence',hp_seq:'Phase 1 — Preparation: LOAD + countdown (15s to 120s)\nPhase 2 — ATTENTION: 7 seconds\nPhase 3 — Discipline\nPhase 4 — STOP then UNLOAD',
+    h_prec:'Precision 25m',hp_prec:'Beep → 🟢 FIRE 300s → Beep → 🔴 +2s listen → STOP',
+    h_vit:'Speed 25m — cycle × 5',hp_vit:'Beep → 🔴 Arm at 45° 7s\nBeep → 🟢 FIRE 3s + 2s listen (= 5s mic open)\n→ repeated 5 times → STOP',
+    h_vo:'R.F and Standard',hp_vo:'Series announce → Beep → 🟢 FIRE Xs → Beep → 🔴 +2s listen → STOP',
+    h_over:'Overtime',hp_over:'2s after fire window: mic open. Shots marked OVERTIME in orange.',
+    h_mic_tip:'Microphone settings',hp_mic_tip:'Peak pressure detection (optimised for gunshots). Default 30%. Raise for false positives, lower for missed shots.',
   }
 };
 
 // ═══ STATE ═══
-let lang = 'fr';
-let seqActive = false, seqAbort = false;
-let shots = [], lastShotMs = -9999;
-let fireWindowStart = 0, fireWindowActive = false, overtimeActive = false;
-let currentEventKey = 'prec25';
-let micStream = null, analyserNode = null, audioCtxMic = null;
-let micActive = false, micAnimFrame = null;
-let cntInterval = null, seqTimers = [];
+let lang='fr';
+let seqActive=false,seqAbort=false;
+let shots=[],lastShotMs=-9999;
+let fireWindowStart=0,fireWindowActive=false,overtimeActive=false;
+let currentEventKey='prec25';
+let micStream=null,analyserNode=null,audioCtxMic=null;
+let micActive=false,micAnimFrame=null;
+let cntInterval=null,seqTimers=[];
 
 // ═══ INIT ═══
-window.addEventListener('load', () => {
+window.addEventListener('load',()=>{
   loadPrefs(); buildAll(); applyLang(); updateShotTable();
+  document.getElementById('version-tag').textContent=APP_VERSION;
+  checkForUpdate();
 });
 
-// ═══ PREFS ═══
-function savePref() {
-  localStorage.setItem('pt_lang',   lang);
-  localStorage.setItem('pt_load',   document.getElementById('set-loading-time').value);
-  localStorage.setItem('pt_dir',    document.getElementById('set-dir').value);
-  localStorage.setItem('pt_vol',    document.getElementById('set-vol').value);
-  localStorage.setItem('pt_thresh', document.getElementById('set-thresh').value);
-  localStorage.setItem('pt_echo',   document.getElementById('set-echo').value);
+// ═══ MISE À JOUR ═══
+let newWorker=null;
+function checkForUpdate(){
+  if(!('serviceWorker' in navigator))return;
+  navigator.serviceWorker.register('./sw.js').then(reg=>{
+    reg.addEventListener('updatefound',()=>{
+      newWorker=reg.installing;
+      newWorker.addEventListener('statechange',()=>{
+        if(newWorker.state==='installed'&&navigator.serviceWorker.controller){
+          document.getElementById('update-banner').style.display='block';
+          document.getElementById('update-msg').textContent=T[lang].updateMsg;
+        }
+      });
+    });
+  });
+  navigator.serviceWorker.addEventListener('controllerchange',()=>window.location.reload());
 }
-function loadPrefs() {
+function doUpdate(){
+  if(newWorker) newWorker.postMessage({type:'SKIP_WAITING'});
+  else window.location.reload(true);
+}
+
+// ═══ PREFS ═══
+function savePref(){
+  localStorage.setItem('pt_lang',  lang);
+  localStorage.setItem('pt_load',  document.getElementById('set-loading-time').value);
+  localStorage.setItem('pt_dir',   document.getElementById('set-dir').value);
+  localStorage.setItem('pt_vol',   document.getElementById('set-vol').value);
+  localStorage.setItem('pt_thresh',document.getElementById('set-thresh').value);
+  localStorage.setItem('pt_echo',  document.getElementById('set-echo').value);
+}
+function loadPrefs(){
   const p=(k,d)=>localStorage.getItem(k)??d;
   lang=p('pt_lang','fr');
   document.getElementById('btn-fr').classList.toggle('active',lang==='fr');
@@ -445,36 +495,37 @@ function loadPrefs() {
   const vol=p('pt_vol','1');
   document.getElementById('set-vol').value=vol;
   document.getElementById('vol-val').textContent=Math.round(vol*100)+'%';
-  const thr=p('pt_thresh','65');
+  const thr=p('pt_thresh','30');
   document.getElementById('set-thresh').value=thr;
   document.getElementById('thresh-val').textContent=thr+'%';
-  const ech=p('pt_echo','200');
+  const ech=p('pt_echo','300');
   document.getElementById('set-echo').value=ech;
   document.getElementById('echo-val').textContent=ech+'ms';
 }
 
-// ═══ MICRO ═══
-async function toggleMic() {
+// ═══ MICROPHONE — Détection par pic (peak detection) ═══
+async function toggleMic(){
   const on=document.getElementById('set-mic').checked;
-  if (on) {
-    try {
+  if(on){
+    try{
       micStream=await navigator.mediaDevices.getUserMedia({
-        audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}
+        audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false,channelCount:1}
       });
       audioCtxMic=new(window.AudioContext||window.webkitAudioContext)();
       const src=audioCtxMic.createMediaStreamSource(micStream);
       analyserNode=audioCtxMic.createAnalyser();
-      analyserNode.fftSize=256; analyserNode.smoothingTimeConstant=0.2;
+      analyserNode.fftSize=512;
+      analyserNode.smoothingTimeConstant=0; // Pas de lissage — on veut les pics bruts
       src.connect(analyserNode);
       micActive=true;
       document.getElementById('mic-bar').style.display='flex';
       micLoop();
       showToast(T[lang].toastMicOn);
-    } catch(e) {
+    }catch(e){
       document.getElementById('set-mic').checked=false;
       showToast(T[lang].toastMicErr);
     }
-  } else {
+  }else{
     micActive=false;
     cancelAnimationFrame(micAnimFrame);
     if(micStream){micStream.getTracks().forEach(t=>t.stop());micStream=null;}
@@ -485,32 +536,43 @@ async function toggleMic() {
   }
 }
 
-function getMicLevel() {
-  if (!analyserNode) return 0;
-  const b=new Uint8Array(analyserNode.frequencyBinCount);
+// Calcul du pic max dans le buffer (meilleur pour les détonations)
+function getPeakLevel(){
+  if(!analyserNode)return 0;
+  const b=new Uint8Array(analyserNode.fftSize);
   analyserNode.getByteTimeDomainData(b);
-  let s=0;
-  for(let i=0;i<b.length;i++){const v=(b[i]-128)/128;s+=v*v;}
-  return Math.sqrt(s/b.length);
+  let peak=0;
+  for(let i=0;i<b.length;i++){
+    const v=Math.abs((b[i]-128)/128);
+    if(v>peak)peak=v;
+  }
+  return peak; // 0 à 1
 }
 
-function micLoop() {
-  if (!micActive) return;
-  const level=getMicLevel();
-  const pct=Math.min(100,level*300);
-  document.getElementById('mic-fill').style.width=pct+'%';
-  document.getElementById('mic-db').textContent=Math.round(pct);
+function micLoop(){
+  if(!micActive)return;
+  const level=getPeakLevel();
+  const pct=Math.min(100,Math.round(level*100));
+  const fill=document.getElementById('mic-fill');
+  fill.style.width=pct+'%';
+  // Couleur : rouge si pic fort (proche du seuil)
   const thresh=parseInt(document.getElementById('set-thresh').value)/100;
+  fill.className='mic-level-fill '+(level>=thresh*0.8?'peak':'normal');
+  document.getElementById('mic-db').textContent=pct+'%';
+
   const echo=parseInt(document.getElementById('set-echo').value);
   const now=Date.now();
-  if (level>=thresh&&(now-lastShotMs)>=echo) {
-    if (fireWindowActive||overtimeActive){lastShotMs=now;registerShot(now);}
+  if(level>=thresh&&(now-lastShotMs)>=echo){
+    if(fireWindowActive||overtimeActive){
+      lastShotMs=now;
+      registerShot(now);
+    }
   }
   micAnimFrame=requestAnimationFrame(micLoop);
 }
 
 // ═══ SHOTS ═══
-function registerShot(nowMs) {
+function registerShot(nowMs){
   const elapsed=(nowMs-fireWindowStart)/1000;
   const split=shots.length>0?elapsed-shots[shots.length-1].elapsed:elapsed;
   const isOver=overtimeActive&&!fireWindowActive;
@@ -518,9 +580,9 @@ function registerShot(nowMs) {
   updateShotTable();
 }
 
-function updateShotTable() {
+function updateShotTable(){
   const tb=document.getElementById('shot-tbody'),t=T[lang];
-  if (!shots.length) {
+  if(!shots.length){
     tb.innerHTML=`<tr><td colspan="4" style="color:var(--dim);text-align:center;padding:14px">${t.noShots}</td></tr>`;
     return;
   }
@@ -533,11 +595,9 @@ function updateShotTable() {
 }
 
 // ═══ SÉQUENCE ═══
-function seqPause(ms) {
-  return new Promise(r=>{const id=setTimeout(r,ms);seqTimers.push(id);});
-}
+function seqPause(ms){return new Promise(r=>{const id=setTimeout(r,ms);seqTimers.push(id);});}
 
-function setUI(phase, color, cmd, cmdColor, lr, lg, balle) {
+function setUI(phase,color,cmd,cmdColor,lr,lg,balle){
   const t=T[lang];
   document.getElementById('phase-label').textContent=t[phase]||phase;
   document.getElementById('phase-label').className='phase-label '+(color||'');
@@ -551,7 +611,7 @@ function setUI(phase, color, cmd, cmdColor, lr, lg, balle) {
   else{bl.textContent='';bl.className='balle-label';}
 }
 
-function startCnt(dur, color) {
+function startCnt(dur,color){
   clearInterval(cntInterval);
   const el=document.getElementById('timer-number');
   const down=document.getElementById('set-dir').value==='down';
@@ -565,12 +625,11 @@ function startCnt(dur, color) {
 }
 function stopCnt(){clearInterval(cntInterval);}
 
-// ═══ SÉQUENCE PRINCIPALE ═══
-async function startSequence() {
-  if (seqActive) return;
-  seqActive=true; seqAbort=false;
-  shots=[]; lastShotMs=-9999;
-  fireWindowActive=false; overtimeActive=false; seqTimers=[];
+async function startSequence(){
+  if(seqActive)return;
+  seqActive=true;seqAbort=false;
+  shots=[];lastShotMs=-9999;
+  fireWindowActive=false;overtimeActive=false;seqTimers=[];
   document.getElementById('btn-start').disabled=true;
   document.getElementById('btn-stop').disabled=false;
   document.getElementById('rec-indicator').style.display='none';
@@ -582,77 +641,73 @@ async function startSequence() {
 
   try{if('wakeLock' in navigator)window._wl=await navigator.wakeLock.request('screen');}catch(e){}
 
-  // ── ANNONCE SÉRIE (VO / Standard uniquement) ──
-  if (ev.seriesAudio) {
+  // Annonce série (VO/Standard)
+  if(ev.seriesAudio){
     await playAudio(ev.seriesAudio);
     await seqPause(500);
-    if (seqAbort) return finalize();
+    if(seqAbort)return finalize();
   }
 
-  // ── PHASE 1 : PRÉPARATION ──
+  // Phase 1 : PRÉPARATION
   await playAudio(SND.load);
   setUI('phasePrep','yellow','cmdLoad','yellow',true,false);
   startCnt(loadTime,'yellow');
   await seqPause(loadTime*1000);
   stopCnt();
-  if (seqAbort) return finalize();
+  if(seqAbort)return finalize();
 
-  // ── PHASE 2 : ATTENTION 7s ──
+  // Phase 2 : ATTENTION 7s
   await playAudio(SND.attention);
   setUI('phaseAttn','red','cmdAttn','red',true,false);
   startCnt(7,'red');
   await seqPause(7000);
   stopCnt();
-  if (seqAbort) return finalize();
+  if(seqAbort)return finalize();
 
-  // ── PHASE 3 : DISCIPLINE ──
-  if      (ev.type==='fixed'||ev.type==='window') await runWindow(ev);
-  else if (ev.type==='vit37')                      await runVit37(ev);
-  if (seqAbort) return finalize();
+  // Phase 3 : Discipline
+  if(ev.type==='fixed')      await runWindow(ev);
+  else if(ev.type==='vit37') await runVit37(ev);
+  if(seqAbort)return finalize();
 
-  // ── PHASE 4 : STOP + DÉCHARGEZ ──
+  // Phase 4 : STOP + DÉCHARGEZ
   stopCnt();
-  fireWindowActive=false; overtimeActive=false;
+  fireWindowActive=false;overtimeActive=false;
   document.getElementById('rec-indicator').style.display='none';
   await playAudio(SND.stop);
   setUI('phaseDone','red','cmdStop','red',true,false);
   document.getElementById('timer-number').textContent='0.0';
   await seqPause(1200);
-  if (seqAbort) return finalize();
+  if(seqAbort)return finalize();
   await playAudio(SND.unload);
   setUI('phaseDone','','cmdUnload','',false,false);
   await seqPause(2000);
-
   finalize();
 }
 
-// ── Fenêtre unique : Précision, VO, Standard ──
-async function runWindow(ev) {
-  // BIP → TIR
+// Fenêtre unique
+async function runWindow(ev){
   await playAudio(SND.beep);
   setUI('phaseTir','green','cmdTir','green',false,true);
   document.getElementById('rec-indicator').style.display='inline';
-  fireWindowStart=Date.now(); fireWindowActive=true;
+  fireWindowStart=Date.now();fireWindowActive=true;
   startCnt(ev.fireTime,'green');
   await seqPause(ev.fireTime*1000);
   fireWindowActive=false;
 
-  // BIP + overtime silencieux (chrono ne défile pas)
   await playAudio(SND.beep);
   overtimeActive=true;
   setUI('phaseOver','red','cmdOver','red',true,false);
-  // Affiche 0.0, pas de décompte pour l'overtime
   document.getElementById('timer-number').textContent='0.0';
   await seqPause(ev.overtime*1000);
   overtimeActive=false;
   document.getElementById('rec-indicator').style.display='none';
 }
 
-// ── Vitesse 25m — 5 × (Bras à 45° 7s + TIR 3s + 2s overtime) ──
-async function runVit37(ev) {
+// Vitesse 25m — 5 × (Bras 45° 7s + TIR 3s + 2s overtime)
+async function runVit37(ev){
   const t=T[lang];
-  for (let b=0; b<5; b++) {
-    if (seqAbort) return;
+  for(let b=0;b<5;b++){
+    if(seqAbort)return;
     const lbl=`${t.balleOf} ${b+1} ${t.ofLbl}`;
 
     // BIP → BRAS À 45° (feu rouge) 7s
@@ -661,18 +716,18 @@ async function runVit37(ev) {
     startCnt(ev.waitTime,'red');
     await seqPause(ev.waitTime*1000);
     stopCnt();
-    if (seqAbort) return;
+    if(seqAbort)return;
 
-    // BIP → TIR (feu vert) 3s — micro ouvert
+    // BIP → TIR (feu vert) 3s
     await playAudio(SND.beep);
     setUI('phaseTir','green','cmdTir','green',false,true,lbl);
     document.getElementById('rec-indicator').style.display='inline';
-    fireWindowStart=Date.now(); fireWindowActive=true;
+    fireWindowStart=Date.now();fireWindowActive=true;
     startCnt(ev.fireTime,'green');
     await seqPause(ev.fireTime*1000);
     fireWindowActive=false;
 
-    // BIP + 2s overtime silencieux — micro toujours ouvert
+    // BIP + 2s overtime silencieux
     await playAudio(SND.beep);
     overtimeActive=true;
     setUI('phaseOver','red','cmdOver','red',true,false,lbl);
@@ -683,16 +738,16 @@ async function runVit37(ev) {
   }
 }
 
-function stopSequence() {
-  seqAbort=true; seqActive=false;
-  fireWindowActive=false; overtimeActive=false;
-  seqTimers.forEach(t=>clearTimeout(t)); seqTimers=[];
-  stopCnt(); finalize();
+function stopSequence(){
+  seqAbort=true;seqActive=false;
+  fireWindowActive=false;overtimeActive=false;
+  seqTimers.forEach(t=>clearTimeout(t));seqTimers=[];
+  stopCnt();finalize();
 }
 
-function finalize() {
-  seqActive=false; seqAbort=false;
-  fireWindowActive=false; overtimeActive=false;
+function finalize(){
+  seqActive=false;seqAbort=false;
+  fireWindowActive=false;overtimeActive=false;
   stopCnt();
   document.getElementById('btn-start').disabled=false;
   document.getElementById('btn-stop').disabled=true;
@@ -700,8 +755,8 @@ function finalize() {
   if(window._wl){try{window._wl.release();}catch(e){}window._wl=null;}
 }
 
-function resetAll() {
-  stopSequence(); shots=[];
+function resetAll(){
+  stopSequence();shots=[];
   const t=T[lang];
   document.getElementById('timer-number').textContent='0.0';
   document.getElementById('timer-number').className='timer-number';
@@ -716,7 +771,7 @@ function resetAll() {
 }
 
 // ═══ UI ═══
-function buildAll() {
+function buildAll(){
   const sel=document.getElementById('event-select');
   sel.innerHTML='';
   EVENTS.forEach(ev=>{
@@ -740,26 +795,23 @@ function buildAll() {
   });
 }
 
-function selectEvent(key) {
+function selectEvent(key){
   currentEventKey=key;
   document.getElementById('event-select').value=key;
-  showPage('timer'); resetAll();
+  showPage('timer');resetAll();
   showToast(T[lang].toastEvt);
 }
-
-function onEventChange() {
+function onEventChange(){
   currentEventKey=document.getElementById('event-select').value;
   if(!seqActive)resetAll();
 }
-
-function setLang(l) {
+function setLang(l){
   lang=l;
   document.getElementById('btn-fr').classList.toggle('active',l==='fr');
   document.getElementById('btn-en').classList.toggle('active',l==='en');
-  savePref(); buildAll(); applyLang(); updateShotTable();
+  savePref();buildAll();applyLang();updateShotTable();
 }
-
-function applyLang() {
+function applyLang(){
   const t=T[lang],s=id=>document.getElementById(id);
   s('app-title').textContent=t.appTitle;
   s('tab-timer').textContent=t.tabTimer;
@@ -786,36 +838,33 @@ function applyLang() {
   s('sl-mic').textContent=t.sl_mic;
   s('sd-mic').textContent=t.sd_mic;
   s('sl-thresh').textContent=t.sl_thresh;
+  s('sd-thresh').textContent=t.sd_thresh;
   s('sl-echo').textContent=t.sl_echo;
   s('sd-echo').textContent=t.sd_echo;
-  s('h-seq').textContent=t.h_seq; s('hp-seq').textContent=t.hp_seq;
-  s('h-prec').textContent=t.h_prec; s('hp-prec').textContent=t.hp_prec;
-  s('h-vit').textContent=t.h_vit; s('hp-vit').textContent=t.hp_vit;
-  s('h-vo').textContent=t.h_vo; s('hp-vo').textContent=t.hp_vo;
-  s('h-over').textContent=t.h_over; s('hp-over').textContent=t.hp_over;
+  s('update-msg').textContent=t.updateMsg;
+  s('h-seq').textContent=t.h_seq;s('hp-seq').textContent=t.hp_seq;
+  s('h-prec').textContent=t.h_prec;s('hp-prec').textContent=t.hp_prec;
+  s('h-vit').textContent=t.h_vit;s('hp-vit').textContent=t.hp_vit;
+  s('h-vo').textContent=t.h_vo;s('hp-vo').textContent=t.hp_vo;
+  s('h-over').textContent=t.h_over;s('hp-over').textContent=t.hp_over;
+  s('h-mic-tip').textContent=t.h_mic_tip;s('hp-mic-tip').textContent=t.hp_mic_tip;
+  s('hp-version').textContent=APP_VERSION+' — Pour forcer la mise à jour : rechargez la page (glisser vers le bas dans Chrome).';
   if(!seqActive){
     s('phase-label').textContent=t.phaseWait;
     s('command-text').textContent=t.cmdReady;
   }
 }
-
-function showPage(id) {
+function showPage(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
   document.getElementById('tab-'+id).classList.add('active');
 }
-
-function showToast(msg) {
+function showToast(msg){
   const el=document.getElementById('toast');
-  el.textContent=msg; el.classList.add('show');
+  el.textContent=msg;el.classList.add('show');
   setTimeout(()=>el.classList.remove('show'),2500);
 }
-</script>
-
-<script>
-if('serviceWorker' in navigator)
-  window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js'));
 </script>
 </body>
 </html>
