@@ -31,7 +31,7 @@ header h1{font-family:var(--head);font-size:16px;font-weight:600;color:var(--acc
 .lang-btn button{background:none;border:1px solid var(--border);color:var(--dim);padding:3px 9px;
   border-radius:4px;font-family:var(--body);font-size:12px;cursor:pointer;transition:all .2s;}
 .lang-btn button.active{border-color:var(--accent);color:var(--accent);background:rgba(232,184,75,.08);}
-nav{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;background:var(--panel);border-bottom:1px solid var(--border);}
+nav{display:grid;grid-template-columns:1fr 1fr 1fr;background:var(--panel);border-bottom:1px solid var(--border);}
 .nav-btn{padding:13px 4px;font-family:var(--head);font-size:11px;font-weight:600;letter-spacing:1.5px;
   text-transform:uppercase;color:var(--dim);border:none;border-bottom:3px solid transparent;
   background:var(--panel);cursor:pointer;transition:all .2s;text-align:center;}
@@ -52,7 +52,6 @@ select{background:var(--panel2);border:1px solid var(--border);color:var(--text)
 .command-text.idle{color:var(--dim);}
 .command-text.red{color:var(--red);}
 .command-text.green{color:var(--green);}
-.command-text.blue{color:var(--blue);}
 .command-text.yellow{color:var(--accent);}
 .timer-display{background:var(--panel2);border:1px solid var(--border);border-radius:12px;
   padding:20px 16px;text-align:center;margin-bottom:14px;position:relative;overflow:hidden;}
@@ -61,14 +60,14 @@ select{background:var(--panel2);border:1px solid var(--border);color:var(--text)
 .phase-label{font-family:var(--head);font-size:12px;letter-spacing:3px;text-transform:uppercase;
   color:var(--dim);margin-bottom:4px;min-height:18px;transition:color .3s;}
 .phase-label.red{color:var(--red);}.phase-label.green{color:var(--green);}
-.phase-label.yellow{color:var(--accent);}.phase-label.blue{color:var(--blue);}
-.balle-label{font-family:var(--head);font-size:13px;letter-spacing:2px;color:var(--dim);
+.phase-label.yellow{color:var(--accent);}
+.coup-label{font-family:var(--head);font-size:13px;letter-spacing:2px;color:var(--dim);
   margin-bottom:6px;min-height:18px;transition:color .3s;}
-.balle-label.green{color:var(--green);}.balle-label.red{color:var(--red);}.balle-label.blue{color:var(--blue);}
+.coup-label.green{color:var(--green);}.coup-label.red{color:var(--red);}
 .timer-number{font-family:var(--mono);font-size:86px;font-weight:400;line-height:1;
   color:var(--bright);letter-spacing:-3px;transition:color .3s;}
 .timer-number.red{color:var(--red);}.timer-number.green{color:var(--green);}
-.timer-number.yellow{color:var(--accent);}.timer-number.blue{color:var(--blue);}
+.timer-number.yellow{color:var(--accent);}
 .status-lights{display:flex;justify-content:center;gap:24px;margin-top:14px;}
 .light{width:14px;height:14px;border-radius:50%;background:var(--panel);border:2px solid var(--border);transition:all .3s;}
 .light.red-on{background:var(--red);border-color:var(--red);box-shadow:0 0 12px var(--red);}
@@ -137,7 +136,6 @@ select{background:var(--panel2);border:1px solid var(--border);color:var(--text)
   background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:10px 20px;
   font-size:14px;color:var(--text);transition:transform .3s;z-index:999;white-space:nowrap;}
 .toast.show{transform:translateX(-50%) translateY(0);}
-/* Bouton mise à jour */
 .update-banner{display:none;background:rgba(232,184,75,.12);border:1px solid var(--accent);
   border-radius:8px;padding:10px 14px;margin-bottom:12px;text-align:center;cursor:pointer;}
 .update-banner span{font-size:13px;color:var(--accent);font-family:var(--body);font-weight:600;}
@@ -149,7 +147,7 @@ select{background:var(--panel2);border:1px solid var(--border);color:var(--text)
 <header>
   <div class="header-left">
     <h1 id="app-title">Minuterie Pistolet</h1>
-    <span class="version-tag" id="version-tag">v1.05</span>
+    <span class="version-tag" id="version-tag">v1.06</span>
   </div>
   <div class="lang-btn">
     <button id="btn-fr" class="active" onclick="setLang('fr')">FR</button>
@@ -157,70 +155,15 @@ select{background:var(--panel2);border:1px solid var(--border);color:var(--text)
   </div>
 </header>
 
+<!-- ORDRE : Réglages | Discipline | Minuterie -->
 <nav>
-  <button class="nav-btn active" onclick="showPage('timer')"      id="tab-timer">Minuterie</button>
+  <button class="nav-btn active" onclick="showPage('settings')"   id="tab-settings">Réglages</button>
   <button class="nav-btn"        onclick="showPage('discipline')"  id="tab-discipline">Discipline</button>
-  <button class="nav-btn"        onclick="showPage('settings')"   id="tab-settings">Réglages</button>
-  <button class="nav-btn"        onclick="showPage('help')"       id="tab-help">Aide</button>
+  <button class="nav-btn"        onclick="showPage('timer')"      id="tab-timer">Minuterie</button>
 </nav>
 
-<!-- MINUTERIE -->
-<div class="page active" id="page-timer">
-
-  <div class="update-banner" id="update-banner" onclick="doUpdate()">
-    <span id="update-msg">🔄 Nouvelle version disponible — Appuyez pour mettre à jour</span>
-  </div>
-
-  <div style="margin-bottom:12px">
-    <select id="event-select" onchange="onEventChange()"></select>
-  </div>
-  <div class="command-display">
-    <div class="command-text idle" id="command-text">— PRÊT —</div>
-  </div>
-  <div class="timer-display">
-    <div class="phase-label" id="phase-label">EN ATTENTE</div>
-    <div class="balle-label" id="balle-label"></div>
-    <div class="timer-number" id="timer-number">0.0</div>
-    <div class="status-lights">
-      <div class="light" id="light-red"></div>
-      <div class="light" id="light-green"></div>
-    </div>
-  </div>
-  <div id="mic-bar" class="mic-bar" style="display:none">
-    <span style="font-size:15px">🎙</span>
-    <div class="mic-level-track"><div class="mic-level-fill normal" id="mic-fill"></div></div>
-    <span class="mic-label" id="mic-db">—</span>
-    <span id="rec-indicator" style="display:none;font-family:var(--mono);font-size:11px;color:var(--red)">
-      <span class="rec-dot"></span>REC
-    </span>
-  </div>
-  <div class="ctrl-row">
-    <button class="btn-start" id="btn-start" onclick="startSequence()">▶ DÉPART</button>
-    <button class="btn-stop"  id="btn-stop"  onclick="stopSequence()" disabled>■ STOP</button>
-    <button class="btn-reset" id="btn-reset" onclick="resetAll()">↺ RESET</button>
-  </div>
-  <p class="section-title" id="lbl-shots">Coups détectés</p>
-  <div class="shot-table">
-    <table>
-      <thead><tr>
-        <th id="th-num">#</th>
-        <th id="th-time">Temps</th>
-        <th id="th-split">Split</th>
-        <th id="th-note">Note</th>
-      </tr></thead>
-      <tbody id="shot-tbody"></tbody>
-    </table>
-  </div>
-</div>
-
-<!-- DISCIPLINE -->
-<div class="page" id="page-discipline">
-  <p class="section-title" id="lbl-disc-title">Disciplines disponibles</p>
-  <div id="disc-list"></div>
-</div>
-
-<!-- RÉGLAGES -->
-<div class="page" id="page-settings">
+<!-- RÉGLAGES (page d'accueil) -->
+<div class="page active" id="page-settings">
   <div class="settings-section">
     <div class="settings-header" id="sh-general">Général</div>
     <div class="settings-row">
@@ -231,6 +174,7 @@ select{background:var(--panel2);border:1px solid var(--border);color:var(--text)
       <select id="set-loading-time" onchange="savePref()">
         <option value="15">15s</option>
         <option value="30">30s</option>
+        <option value="45">45s</option>
         <option value="60" selected>60s</option>
         <option value="90">90s</option>
         <option value="120">120s</option>
@@ -282,49 +226,76 @@ select{background:var(--panel2);border:1px solid var(--border);color:var(--text)
       <span class="range-val" id="echo-val">300ms</span>
     </div>
   </div>
+
+  <div class="settings-section">
+    <div class="settings-header">Version</div>
+    <div class="settings-row">
+      <div>
+        <div class="settings-label" id="ver-label">v1.06</div>
+        <div class="settings-desc" id="ver-desc">Glisser vers le bas pour mettre à jour</div>
+      </div>
+    </div>
+  </div>
 </div>
 
-<!-- AIDE -->
-<div class="page" id="page-help">
-  <div class="help-block">
-    <h3 id="h-seq">Séquence commune</h3>
-    <p id="hp-seq">Phase 1 — Préparation : CHARGEZ + décompte (15s à 120s)
-Phase 2 — ATTENTION : 7 secondes fixes
-Phase 3 — Discipline (voir ci-dessous)
-Phase 4 — STOP puis DÉCHARGEZ</p>
+<!-- DISCIPLINE -->
+<div class="page" id="page-discipline">
+  <p class="section-title" id="lbl-disc-title">Disciplines disponibles</p>
+  <div id="disc-list"></div>
+</div>
+
+<!-- MINUTERIE -->
+<div class="page" id="page-timer">
+  <div class="update-banner" id="update-banner" onclick="doUpdate()">
+    <span id="update-msg">🔄 Nouvelle version disponible — Appuyez pour mettre à jour</span>
   </div>
-  <div class="help-block">
-    <h3 id="h-prec">Précision 25m</h3>
-    <p id="hp-prec">Bip → 🟢 TIR 300s → Bip → 🔴 +2s écoute → STOP</p>
+
+  <div style="margin-bottom:12px">
+    <select id="event-select" onchange="onEventChange()"></select>
   </div>
-  <div class="help-block">
-    <h3 id="h-vit">Vitesse 25m — cycle × 5</h3>
-    <p id="hp-vit">Bip → 🔴 Bras à 45° 7s
-Bip → 🟢 TIR 3s + 2s écoute (= 5s micro ouvert)
-→ répété 5 fois → STOP</p>
+  <div class="command-display">
+    <div class="command-text idle" id="command-text">— PRÊT —</div>
   </div>
-  <div class="help-block">
-    <h3 id="h-vo">V.O et Standard</h3>
-    <p id="hp-vo">Annonce série → Bip → 🟢 TIR Xs → Bip → 🔴 +2s écoute → STOP</p>
+  <div class="timer-display">
+    <div class="phase-label" id="phase-label">EN ATTENTE</div>
+    <div class="coup-label" id="coup-label"></div>
+    <div class="timer-number" id="timer-number">0.0</div>
+    <div class="status-lights">
+      <div class="light" id="light-red"></div>
+      <div class="light" id="light-green"></div>
+    </div>
   </div>
-  <div class="help-block">
-    <h3 id="h-over">Hors-temps</h3>
-    <p id="hp-over">Les 2s après la fenêtre de tir : micro ouvert. Les coups détectés sont marqués HORS TEMPS en orange. Ce temps n'est pas affiché dans le chrono.</p>
+  <div id="mic-bar" class="mic-bar" style="display:none">
+    <span style="font-size:15px">🎙</span>
+    <div class="mic-level-track"><div class="mic-level-fill normal" id="mic-fill"></div></div>
+    <span class="mic-label" id="mic-db">—</span>
+    <span id="rec-indicator" style="display:none;font-family:var(--mono);font-size:11px;color:var(--red)">
+      <span class="rec-dot"></span>REC
+    </span>
   </div>
-  <div class="help-block">
-    <h3 id="h-mic-tip">Réglage du microphone</h3>
-    <p id="hp-mic-tip">La détection utilise le pic de pression sonore (méthode adaptée aux détonations). Seuil par défaut : 30%. Augmentez si des sons parasites sont détectés, diminuez si des coups sont manqués. Le délai anti-rebond évite qu'un seul coup soit compté deux fois.</p>
+  <div class="ctrl-row">
+    <button class="btn-start" id="btn-start" onclick="startSequence()">▶ DÉPART</button>
+    <button class="btn-stop"  id="btn-stop"  onclick="stopSequence()" disabled>■ STOP</button>
+    <button class="btn-reset" id="btn-reset" onclick="resetAll()">↺ RESET</button>
   </div>
-  <div class="help-block">
-    <h3>Version</h3>
-    <p id="hp-version">v1.05 — Pour forcer la mise à jour sur votre téléphone : rechargez la page (glisser vers le bas dans Chrome).</p>
+  <p class="section-title" id="lbl-shots">Coups détectés</p>
+  <div class="shot-table">
+    <table>
+      <thead><tr>
+        <th id="th-num">#</th>
+        <th id="th-time">Temps</th>
+        <th id="th-split">Split</th>
+        <th id="th-note">Note</th>
+      </tr></thead>
+      <tbody id="shot-tbody"></tbody>
+    </table>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION = 'v1.05';
+const APP_VERSION = 'v1.06';
 
 // ═══ DISCIPLINES ═══
 const EVENTS = [
@@ -334,13 +305,13 @@ const EVENTS = [
   { key:'vit25',   type:'vit37', fireTime:3, waitTime:7, overtime:2, seriesAudio:null,
     fr:{name:'Vitesse 25m',    detail:'5 coups — 3s tir / 7s bras à 45°'},
     en:{name:'Speed 25m',      detail:'5 shots — 3s fire / 7s arm at 45°'} },
-  { key:'vo4',     type:'fixed', fireTime:4,  overtime:2, seriesAudio:'raw/paul_series_4.ogg',
+  { key:'vo4',     type:'fixed', fireTime:4,   overtime:2, seriesAudio:'raw/paul_series_4.ogg',
     fr:{name:'V.O 4s',         detail:'5 coups — 4 secondes — Cibles tournantes'},
     en:{name:'R.F 4s',         detail:'5 shots — 4 seconds — Turning targets'} },
-  { key:'vo6',     type:'fixed', fireTime:6,  overtime:2, seriesAudio:'raw/paul_series_6.ogg',
+  { key:'vo6',     type:'fixed', fireTime:6,   overtime:2, seriesAudio:'raw/paul_series_6.ogg',
     fr:{name:'V.O 6s',         detail:'5 coups — 6 secondes — Cibles tournantes'},
     en:{name:'R.F 6s',         detail:'5 shots — 6 seconds — Turning targets'} },
-  { key:'vo8',     type:'fixed', fireTime:8,  overtime:2, seriesAudio:'raw/paul_series_8.ogg',
+  { key:'vo8',     type:'fixed', fireTime:8,   overtime:2, seriesAudio:'raw/paul_series_8.ogg',
     fr:{name:'V.O 8s',         detail:'5 coups — 8 secondes — Cibles tournantes'},
     en:{name:'R.F 8s',         detail:'5 shots — 8 seconds — Turning targets'} },
   { key:'std150',  type:'fixed', fireTime:150, overtime:2, seriesAudio:'raw/paul_series_150.ogg',
@@ -363,23 +334,23 @@ const SND = {
   beep:      'raw/beep.ogg',
 };
 
-function playAudio(src) {
-  return new Promise(resolve => {
-    if (!src){resolve();return;}
-    try {
-      const a = new Audio(src);
-      a.volume = parseFloat(document.getElementById('set-vol').value);
-      a.onended = resolve; a.onerror = resolve;
+function playAudio(src){
+  return new Promise(resolve=>{
+    if(!src){resolve();return;}
+    try{
+      const a=new Audio(src);
+      a.volume=parseFloat(document.getElementById('set-vol').value);
+      a.onended=resolve;a.onerror=resolve;
       a.play().catch(resolve);
-    } catch(e){resolve();}
+    }catch(e){resolve();}
   });
 }
 
 // ═══ TRADUCTIONS ═══
-const T = {
+const T={
   fr:{
     appTitle:'Minuterie Pistolet',
-    tabTimer:'Minuterie',tabDisc:'Discipline',tabSettings:'Réglages',tabHelp:'Aide',
+    tabSettings:'Réglages',tabDisc:'Discipline',tabTimer:'Minuterie',
     btnStart:'▶ DÉPART',btnStop:'■ STOP',btnReset:'↺ RESET',
     cmdReady:'— PRÊT —',cmdLoad:'CHARGEZ',cmdAttn:'ATTENTION',
     cmdTir:'TIR',cmdStop:'STOP',cmdUnload:'DÉCHARGEZ',cmdWait:'BRAS À 45°',cmdOver:'HORS-TEMPS',
@@ -387,7 +358,7 @@ const T = {
     phaseTir:'TIR',phaseWait45:'BRAS À 45°',phaseOver:'HORS-TEMPS',phaseDone:'TERMINÉ',
     lblShots:'Coups détectés',thNum:'#',thTime:'Temps',thSplit:'Split',thNote:'Note',
     noShots:'Aucun coup enregistré',noteOk:'OK',noteOver:'HORS TEMPS',
-    balleOf:'Balle',ofLbl:'/ 5',
+    coupOf:'Coup',ofLbl:'/ 5',
     toastMicOn:'🎙 Microphone activé',toastMicOff:'🔇 Microphone désactivé',
     toastMicErr:'⚠ Accès micro refusé',toastEvt:'✓ Discipline sélectionnée',
     lbl_disc_title:'Disciplines disponibles',
@@ -399,16 +370,11 @@ const T = {
     sl_thresh:'Seuil de détection',sd_thresh:'Monter si faux positifs, baisser si coups manqués',
     sl_echo:'Délai anti-rebond',sd_echo:'Entre deux coups détectés',
     updateMsg:'🔄 Nouvelle version disponible — Appuyez pour mettre à jour',
-    h_seq:'Séquence commune',hp_seq:'Phase 1 — Préparation : CHARGEZ + décompte (15s à 120s)\nPhase 2 — ATTENTION : 7 secondes fixes\nPhase 3 — Discipline\nPhase 4 — STOP puis DÉCHARGEZ',
-    h_prec:'Précision 25m',hp_prec:'Bip → 🟢 TIR 300s → Bip → 🔴 +2s écoute → STOP',
-    h_vit:'Vitesse 25m — cycle × 5',hp_vit:'Bip → 🔴 Bras à 45° 7s\nBip → 🟢 TIR 3s + 2s écoute (= 5s micro ouvert)\n→ répété 5 fois → STOP',
-    h_vo:'V.O et Standard',hp_vo:'Annonce série → Bip → 🟢 TIR Xs → Bip → 🔴 +2s écoute → STOP',
-    h_over:'Hors-temps',hp_over:'Les 2s après la fenêtre de tir : micro ouvert. Coups marqués HORS TEMPS en orange.',
-    h_mic_tip:'Réglage du microphone',hp_mic_tip:'Détection par pic de pression sonore. Seuil 30% par défaut. Augmentez si faux positifs, diminuez si coups manqués.',
+    ver_desc:'Glisser vers le bas pour mettre à jour',
   },
   en:{
     appTitle:'Pistol Timer',
-    tabTimer:'Timer',tabDisc:'Discipline',tabSettings:'Settings',tabHelp:'Help',
+    tabSettings:'Settings',tabDisc:'Discipline',tabTimer:'Timer',
     btnStart:'▶ START',btnStop:'■ STOP',btnReset:'↺ RESET',
     cmdReady:'— READY —',cmdLoad:'LOAD',cmdAttn:'ATTENTION',
     cmdTir:'FIRE',cmdStop:'STOP',cmdUnload:'UNLOAD',cmdWait:'ARM AT 45°',cmdOver:'OVERTIME',
@@ -416,7 +382,7 @@ const T = {
     phaseTir:'FIRE',phaseWait45:'ARM AT 45°',phaseOver:'OVERTIME',phaseDone:'DONE',
     lblShots:'Detected shots',thNum:'#',thTime:'Time',thSplit:'Split',thNote:'Note',
     noShots:'No shots registered',noteOk:'OK',noteOver:'OVERTIME',
-    balleOf:'Shot',ofLbl:'/ 5',
+    coupOf:'Shot',ofLbl:'/ 5',
     toastMicOn:'🎙 Microphone on',toastMicOff:'🔇 Microphone off',
     toastMicErr:'⚠ Mic access denied',toastEvt:'✓ Discipline selected',
     lbl_disc_title:'Available disciplines',
@@ -428,12 +394,7 @@ const T = {
     sl_thresh:'Detection threshold',sd_thresh:'Raise if false positives, lower if shots missed',
     sl_echo:'Anti-bounce delay',sd_echo:'Between two detected shots',
     updateMsg:'🔄 New version available — Tap to update',
-    h_seq:'Common sequence',hp_seq:'Phase 1 — Preparation: LOAD + countdown (15s to 120s)\nPhase 2 — ATTENTION: 7 seconds\nPhase 3 — Discipline\nPhase 4 — STOP then UNLOAD',
-    h_prec:'Precision 25m',hp_prec:'Beep → 🟢 FIRE 300s → Beep → 🔴 +2s listen → STOP',
-    h_vit:'Speed 25m — cycle × 5',hp_vit:'Beep → 🔴 Arm at 45° 7s\nBeep → 🟢 FIRE 3s + 2s listen (= 5s mic open)\n→ repeated 5 times → STOP',
-    h_vo:'R.F and Standard',hp_vo:'Series announce → Beep → 🟢 FIRE Xs → Beep → 🔴 +2s listen → STOP',
-    h_over:'Overtime',hp_over:'2s after fire window: mic open. Shots marked OVERTIME in orange.',
-    h_mic_tip:'Microphone settings',hp_mic_tip:'Peak pressure detection (optimised for gunshots). Default 30%. Raise for false positives, lower for missed shots.',
+    ver_desc:'Pull down to refresh',
   }
 };
 
@@ -449,8 +410,9 @@ let cntInterval=null,seqTimers=[];
 
 // ═══ INIT ═══
 window.addEventListener('load',()=>{
-  loadPrefs(); buildAll(); applyLang(); updateShotTable();
+  loadPrefs();buildAll();applyLang();updateShotTable();
   document.getElementById('version-tag').textContent=APP_VERSION;
+  document.getElementById('ver-label').textContent=APP_VERSION;
   checkForUpdate();
 });
 
@@ -464,7 +426,6 @@ function checkForUpdate(){
       newWorker.addEventListener('statechange',()=>{
         if(newWorker.state==='installed'&&navigator.serviceWorker.controller){
           document.getElementById('update-banner').style.display='block';
-          document.getElementById('update-msg').textContent=T[lang].updateMsg;
         }
       });
     });
@@ -472,18 +433,18 @@ function checkForUpdate(){
   navigator.serviceWorker.addEventListener('controllerchange',()=>window.location.reload());
 }
 function doUpdate(){
-  if(newWorker) newWorker.postMessage({type:'SKIP_WAITING'});
+  if(newWorker)newWorker.postMessage({type:'SKIP_WAITING'});
   else window.location.reload(true);
 }
 
 // ═══ PREFS ═══
 function savePref(){
-  localStorage.setItem('pt_lang',  lang);
-  localStorage.setItem('pt_load',  document.getElementById('set-loading-time').value);
-  localStorage.setItem('pt_dir',   document.getElementById('set-dir').value);
-  localStorage.setItem('pt_vol',   document.getElementById('set-vol').value);
-  localStorage.setItem('pt_thresh',document.getElementById('set-thresh').value);
-  localStorage.setItem('pt_echo',  document.getElementById('set-echo').value);
+  localStorage.setItem('pt_lang',   lang);
+  localStorage.setItem('pt_load',   document.getElementById('set-loading-time').value);
+  localStorage.setItem('pt_dir',    document.getElementById('set-dir').value);
+  localStorage.setItem('pt_vol',    document.getElementById('set-vol').value);
+  localStorage.setItem('pt_thresh', document.getElementById('set-thresh').value);
+  localStorage.setItem('pt_echo',   document.getElementById('set-echo').value);
 }
 function loadPrefs(){
   const p=(k,d)=>localStorage.getItem(k)??d;
@@ -503,7 +464,7 @@ function loadPrefs(){
   document.getElementById('echo-val').textContent=ech+'ms';
 }
 
-// ═══ MICROPHONE — Détection par pic (peak detection) ═══
+// ═══ MICRO ═══
 async function toggleMic(){
   const on=document.getElementById('set-mic').checked;
   if(on){
@@ -515,7 +476,7 @@ async function toggleMic(){
       const src=audioCtxMic.createMediaStreamSource(micStream);
       analyserNode=audioCtxMic.createAnalyser();
       analyserNode.fftSize=512;
-      analyserNode.smoothingTimeConstant=0; // Pas de lissage — on veut les pics bruts
+      analyserNode.smoothingTimeConstant=0;
       src.connect(analyserNode);
       micActive=true;
       document.getElementById('mic-bar').style.display='flex';
@@ -536,7 +497,6 @@ async function toggleMic(){
   }
 }
 
-// Calcul du pic max dans le buffer (meilleur pour les détonations)
 function getPeakLevel(){
   if(!analyserNode)return 0;
   const b=new Uint8Array(analyserNode.fftSize);
@@ -546,7 +506,7 @@ function getPeakLevel(){
     const v=Math.abs((b[i]-128)/128);
     if(v>peak)peak=v;
   }
-  return peak; // 0 à 1
+  return peak;
 }
 
 function micLoop(){
@@ -555,18 +515,13 @@ function micLoop(){
   const pct=Math.min(100,Math.round(level*100));
   const fill=document.getElementById('mic-fill');
   fill.style.width=pct+'%';
-  // Couleur : rouge si pic fort (proche du seuil)
   const thresh=parseInt(document.getElementById('set-thresh').value)/100;
   fill.className='mic-level-fill '+(level>=thresh*0.8?'peak':'normal');
   document.getElementById('mic-db').textContent=pct+'%';
-
   const echo=parseInt(document.getElementById('set-echo').value);
   const now=Date.now();
   if(level>=thresh&&(now-lastShotMs)>=echo){
-    if(fireWindowActive||overtimeActive){
-      lastShotMs=now;
-      registerShot(now);
-    }
+    if(fireWindowActive||overtimeActive){lastShotMs=now;registerShot(now);}
   }
   micAnimFrame=requestAnimationFrame(micLoop);
 }
@@ -597,7 +552,7 @@ function updateShotTable(){
 // ═══ SÉQUENCE ═══
 function seqPause(ms){return new Promise(r=>{const id=setTimeout(r,ms);seqTimers.push(id);});}
 
-function setUI(phase,color,cmd,cmdColor,lr,lg,balle){
+function setUI(phase,color,cmd,cmdColor,lr,lg,coup){
   const t=T[lang];
   document.getElementById('phase-label').textContent=t[phase]||phase;
   document.getElementById('phase-label').className='phase-label '+(color||'');
@@ -606,9 +561,9 @@ function setUI(phase,color,cmd,cmdColor,lr,lg,balle){
   document.getElementById('command-text').className='command-text '+(cmdColor||'');
   document.getElementById('light-red').className='light '+(lr?'red-on':'');
   document.getElementById('light-green').className='light '+(lg?'green-on':'');
-  const bl=document.getElementById('balle-label');
-  if(balle){bl.textContent=balle;bl.className='balle-label '+(color||'');}
-  else{bl.textContent='';bl.className='balle-label';}
+  const cl=document.getElementById('coup-label');
+  if(coup){cl.textContent=coup;cl.className='coup-label '+(color||'');}
+  else{cl.textContent='';cl.className='coup-label';}
 }
 
 function startCnt(dur,color){
@@ -625,6 +580,7 @@ function startCnt(dur,color){
 }
 function stopCnt(){clearInterval(cntInterval);}
 
+// ═══ SÉQUENCE PRINCIPALE ═══
 async function startSequence(){
   if(seqActive)return;
   seqActive=true;seqAbort=false;
@@ -641,7 +597,7 @@ async function startSequence(){
 
   try{if('wakeLock' in navigator)window._wl=await navigator.wakeLock.request('screen');}catch(e){}
 
-  // Annonce série (VO/Standard)
+  // Annonce série (VO / Standard)
   if(ev.seriesAudio){
     await playAudio(ev.seriesAudio);
     await seqPause(500);
@@ -684,7 +640,7 @@ async function startSequence(){
   finalize();
 }
 
-// Fenêtre unique
+// Fenêtre unique — Précision, VO, Standard
 async function runWindow(ev){
   await playAudio(SND.beep);
   setUI('phaseTir','green','cmdTir','green',false,true);
@@ -693,7 +649,7 @@ async function runWindow(ev){
   startCnt(ev.fireTime,'green');
   await seqPause(ev.fireTime*1000);
   fireWindowActive=false;
-
+  // Bip fin + overtime silencieux
   await playAudio(SND.beep);
   overtimeActive=true;
   setUI('phaseOver','red','cmdOver','red',true,false);
@@ -703,22 +659,18 @@ async function runWindow(ev){
   document.getElementById('rec-indicator').style.display='none';
 }
 
-// Vitesse 25m — 5 × (Bras 45° 7s + TIR 3s + 2s overtime)
+// Vitesse 25m — séquence exacte :
+// ATTENTION(7s) → pour chaque coup 1..5 :
+//   BIP → TIR 3s
+//   BIP → Bras 45° 7s (micro ouvert les 2 premières secondes)
+//   sauf après le coup 5 : BIP → +2s overtime seulement puis STOP
 async function runVit37(ev){
   const t=T[lang];
-  for(let b=0;b<5;b++){
+  for(let c=0;c<5;c++){
     if(seqAbort)return;
-    const lbl=`${t.balleOf} ${b+1} ${t.ofLbl}`;
+    const lbl=`${t.coupOf} ${c+1} ${t.ofLbl}`;
 
-    // BIP → BRAS À 45° (feu rouge) 7s
-    await playAudio(SND.beep);
-    setUI('phaseWait45','red','cmdWait','red',true,false,lbl);
-    startCnt(ev.waitTime,'red');
-    await seqPause(ev.waitTime*1000);
-    stopCnt();
-    if(seqAbort)return;
-
-    // BIP → TIR (feu vert) 3s
+    // BIP → TIR 3s (feu vert, micro ouvert)
     await playAudio(SND.beep);
     setUI('phaseTir','green','cmdTir','green',false,true,lbl);
     document.getElementById('rec-indicator').style.display='inline';
@@ -726,15 +678,39 @@ async function runVit37(ev){
     startCnt(ev.fireTime,'green');
     await seqPause(ev.fireTime*1000);
     fireWindowActive=false;
+    stopCnt();
+    if(seqAbort)return;
 
-    // BIP + 2s overtime silencieux
+    // BIP → fin du tir
     await playAudio(SND.beep);
-    overtimeActive=true;
-    setUI('phaseOver','red','cmdOver','red',true,false,lbl);
-    document.getElementById('timer-number').textContent='0.0';
-    await seqPause(ev.overtime*1000);
-    overtimeActive=false;
-    document.getElementById('rec-indicator').style.display='none';
+
+    if(c<4){
+      // Coups 1 à 4 : Bras à 45° pendant 7s
+      // Micro ouvert les 2 premières secondes (overtime), fermé les 5 suivantes
+      setUI('phaseOver','red','cmdOver','red',true,false,lbl);
+      document.getElementById('timer-number').textContent='0.0';
+      overtimeActive=true;
+      await seqPause(ev.overtime*1000);   // 2s micro ouvert
+      overtimeActive=false;
+      document.getElementById('rec-indicator').style.display='none';
+      if(seqAbort)return;
+
+      // Suite du Bras à 45° (5s restantes = 7s - 2s)
+      setUI('phaseWait45','red','cmdWait','red',true,false,lbl);
+      startCnt(ev.waitTime - ev.overtime,'red');
+      await seqPause((ev.waitTime - ev.overtime)*1000);
+      stopCnt();
+      if(seqAbort)return;
+
+    } else {
+      // Coup 5 : juste +2s overtime puis STOP
+      setUI('phaseOver','red','cmdOver','red',true,false,lbl);
+      document.getElementById('timer-number').textContent='0.0';
+      overtimeActive=true;
+      await seqPause(ev.overtime*1000);
+      overtimeActive=false;
+      document.getElementById('rec-indicator').style.display='none';
+    }
   }
 }
 
@@ -762,7 +738,7 @@ function resetAll(){
   document.getElementById('timer-number').className='timer-number';
   document.getElementById('phase-label').textContent=t.phaseWait;
   document.getElementById('phase-label').className='phase-label';
-  document.getElementById('balle-label').textContent='';
+  document.getElementById('coup-label').textContent='';
   document.getElementById('command-text').textContent=t.cmdReady;
   document.getElementById('command-text').className='command-text idle';
   document.getElementById('light-red').className='light';
@@ -814,10 +790,9 @@ function setLang(l){
 function applyLang(){
   const t=T[lang],s=id=>document.getElementById(id);
   s('app-title').textContent=t.appTitle;
-  s('tab-timer').textContent=t.tabTimer;
-  s('tab-discipline').textContent=t.tabDisc;
   s('tab-settings').textContent=t.tabSettings;
-  s('tab-help').textContent=t.tabHelp;
+  s('tab-discipline').textContent=t.tabDisc;
+  s('tab-timer').textContent=t.tabTimer;
   s('btn-start').textContent=t.btnStart;
   s('btn-stop').textContent=t.btnStop;
   s('btn-reset').textContent=t.btnReset;
@@ -842,13 +817,7 @@ function applyLang(){
   s('sl-echo').textContent=t.sl_echo;
   s('sd-echo').textContent=t.sd_echo;
   s('update-msg').textContent=t.updateMsg;
-  s('h-seq').textContent=t.h_seq;s('hp-seq').textContent=t.hp_seq;
-  s('h-prec').textContent=t.h_prec;s('hp-prec').textContent=t.hp_prec;
-  s('h-vit').textContent=t.h_vit;s('hp-vit').textContent=t.hp_vit;
-  s('h-vo').textContent=t.h_vo;s('hp-vo').textContent=t.hp_vo;
-  s('h-over').textContent=t.h_over;s('hp-over').textContent=t.hp_over;
-  s('h-mic-tip').textContent=t.h_mic_tip;s('hp-mic-tip').textContent=t.hp_mic_tip;
-  s('hp-version').textContent=APP_VERSION+' — Pour forcer la mise à jour : rechargez la page (glisser vers le bas dans Chrome).';
+  s('ver-desc').textContent=t.ver_desc;
   if(!seqActive){
     s('phase-label').textContent=t.phaseWait;
     s('command-text').textContent=t.cmdReady;
