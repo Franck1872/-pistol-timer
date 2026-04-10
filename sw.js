@@ -1,4 +1,4 @@
-const VERSION = 'pistol-timer-v1.06';
+const VERSION = 'pistol-timer-v1.07';
 
 const FILES = [
   './',
